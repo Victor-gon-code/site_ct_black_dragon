@@ -244,10 +244,10 @@ main, section, article, div { min-width: 0; }
   position: absolute;
   left: max(clamp(1.1rem, 4vw, 4.5rem), var(--safe-left));
   right: max(clamp(1.1rem, 4vw, 4.5rem), var(--safe-right));
-  bottom: max(clamp(3.3rem, 8vh, 7rem), calc(1.4rem + var(--safe-bottom)));
+  bottom: max(clamp(2rem, 4.5vh, 4.2rem), calc(1.2rem + var(--safe-bottom)));
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(18rem, .55fr);
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: end;
 }
 .eyebrow {
@@ -261,11 +261,11 @@ main, section, article, div { min-width: 0; }
   margin: 0;
   display: grid;
   font-family: var(--display);
-  font-size: clamp(4.7rem, 10vw, 10rem);
+  font-size: clamp(4.4rem, 8.7vw, 8.9rem);
   font-weight: 900;
   font-stretch: condensed;
-  line-height: .77;
-  letter-spacing: -.065em;
+  line-height: .8;
+  letter-spacing: -.06em;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -333,16 +333,21 @@ main, section, article, div { min-width: 0; }
 }
 
 .manifesto {
-  min-height: 115vh;
-  padding: clamp(7rem, 14vw, 13rem) clamp(1.2rem, 5vw, 5.5rem);
+  height: 100svh;
+  min-height: 100svh;
+  padding:
+    max(calc(88px + var(--safe-top) + 1rem), 7.5vh)
+    clamp(1.2rem, 5vw, 5.5rem)
+    max(3rem, calc(1.5rem + var(--safe-bottom)));
   display: grid;
   grid-template-columns: 4rem minmax(0, 1fr) minmax(15rem, 23rem);
   gap: clamp(1rem, 4vw, 5rem);
-  align-items: end;
+  align-items: center;
   border-top: 1px solid rgba(255,255,255,.06);
+  overflow: hidden;
 }
 .manifesto__number {
-  align-self: start;
+  align-self: center;
   writing-mode: vertical-rl;
   font-size: .6rem;
   letter-spacing: .32em;
@@ -360,7 +365,8 @@ main, section, article, div { min-width: 0; }
   text-transform: uppercase;
 }
 .manifesto__side {
-  margin: 0 0 2rem;
+  margin: 0;
+  align-self: end;
   max-width: 24rem;
   color: var(--muted);
   font-size: clamp(1rem, 1.15vw, 1.18rem);
@@ -443,7 +449,7 @@ main, section, article, div { min-width: 0; }
 
 .method {
   position: relative;
-  height: 360vh;
+  height: 400vh;
   background: #0a090b;
 }
 .method__sticky {
@@ -804,6 +810,35 @@ main, section, article, div { min-width: 0; }
 .split-line { display: block; overflow: hidden; }
 .split-line > span { display: inline-block; }
 
+@media (min-width: 981px) and (max-height: 860px) {
+  .hero__copy {
+    bottom: max(1.5rem, calc(1rem + var(--safe-bottom)));
+    gap: 1.1rem;
+  }
+
+  .hero__title {
+    font-size: clamp(3.8rem, 7.8vw, 7.35rem);
+    line-height: .81;
+  }
+
+  .hero__bottom {
+    padding-bottom: 0;
+  }
+
+  .hero__bottom p {
+    margin-bottom: .9rem;
+  }
+
+  .manifesto {
+    padding-top: max(calc(88px + var(--safe-top) + .5rem), 5.5vh);
+    padding-bottom: max(2rem, calc(1rem + var(--safe-bottom)));
+  }
+
+  .manifesto__title {
+    font-size: clamp(3.8rem, 7vw, 7.2rem);
+  }
+}
+
 @media (max-width: 980px) {
   .site-header { grid-template-columns: 1fr auto; min-height: calc(76px + var(--safe-top)); }
   .header__center, .site-nav { display: none; }
@@ -829,18 +864,21 @@ main, section, article, div { min-width: 0; }
     letter-spacing: -.04em;
   }
   .scroll-rail { display: none; }
-  .hero__copy { grid-template-columns: 1fr; bottom: max(3rem, calc(1.4rem + var(--safe-bottom))); }
+  .hero__copy { grid-template-columns: 1fr; bottom: max(2.4rem, calc(1.2rem + var(--safe-bottom))); }
   .hero__title { font-size: clamp(4.5rem, 15vw, 8rem); }
   .hero__bottom { max-width: 23rem; padding-bottom: 0; }
   .hero__scroll, .hero__index { display: none; }
   .manifesto {
     grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: 9rem;
-    padding-bottom: 9rem;
+    height: auto;
+    min-height: 100svh;
+    padding-top: max(6.5rem, calc(76px + var(--safe-top) + 1rem));
+    padding-bottom: max(3rem, calc(1.5rem + var(--safe-bottom)));
+    align-content: center;
+    overflow: visible;
   }
-  .manifesto__number { writing-mode: horizontal-tb; }
-  .manifesto__side { margin-top: 3rem; }
+  .manifesto__number { writing-mode: horizontal-tb; align-self: auto; }
+  .manifesto__side { margin-top: 1.5rem; align-self: auto; }
   .ritual { height: auto; min-height: auto; }
   .ritual__sticky {
     position: relative;
