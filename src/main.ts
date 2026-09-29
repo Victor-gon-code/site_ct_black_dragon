@@ -529,14 +529,16 @@ function setupSceneWheelNavigation() {
 
     const hero = sectionTop('.hero')
     const manifesto = sectionTop('.manifesto')
-    const ritual = sectionTop('.ritual')
     const gloves = sectionTop('.gloves')
     const promise = sectionTop('.promise')
     const contact = sectionTop('.contact')
 
     if (hero !== null) addStop(next, hero, 'hero')
     if (manifesto !== null) addStop(next, manifesto, 'manifesto')
-    if (ritual !== null) addStop(next, ritual, 'ritual')
+
+    // O ritual ocupa exatamente a viewport e permanece preso por três
+    // gestos de scroll antes de liberar a próxima cena.
+    addPinnedStages(next, '.ritual', 3, 'ritual')
 
     addPinnedStages(next, '.method', 4, 'method')
 
