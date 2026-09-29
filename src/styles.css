@@ -22,7 +22,6 @@
 html {
   scroll-behavior: auto;
   background: var(--bg);
-  overscroll-behavior-y: none;
 }
 body {
   margin: 0;
@@ -652,6 +651,7 @@ main, section, article, div { min-width: 0; }
 }
 
 .promise {
+  position: relative;
   min-height: 130svh;
   padding: clamp(7rem, 12vw, 12rem) clamp(1.2rem, 5vw, 5.5rem);
   background: #0c0a0d;
@@ -834,6 +834,56 @@ main, section, article, div { min-width: 0; }
   margin-block: -.08em;
 }
 .split-line > span { display: inline-block; }
+
+
+.scene-snap { display: none; }
+
+@media (min-width: 981px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  .hero,
+  .manifesto,
+  .promise,
+  .contact,
+  .scene-snap {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .scene-snap {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .scene-snap--ritual-1 { top: 0; }
+  .scene-snap--ritual-2 { top: 70svh; }
+  .scene-snap--ritual-3 { top: 140svh; }
+
+  .scene-snap--method-1 { top: 0; }
+  .scene-snap--method-2 { top: 75svh; }
+  .scene-snap--method-3 { top: 150svh; }
+  .scene-snap--method-4 { top: 225svh; }
+  .scene-snap--method-5 { top: 300svh; }
+
+  .scene-snap--gloves-1 { top: 0; }
+  .scene-snap--gloves-2 { top: 80svh; }
+  .scene-snap--gloves-3 { top: 160svh; }
+
+  .scene-snap--film-1 { top: 0; }
+  .scene-snap--film-2 { top: 84svh; }
+  .scene-snap--film-3 { top: 168svh; }
+  .scene-snap--film-4 { top: 252svh; }
+  .scene-snap--film-5 { top: 336svh; }
+  .scene-snap--film-6 { top: 420svh; }
+
+  .scene-snap--promise-end { top: 30svh; }
+}
 
 @media (min-width: 981px) and (max-height: 860px) {
   .hero__copy {
