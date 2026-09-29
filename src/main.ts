@@ -482,9 +482,10 @@ function setupSceneWheelNavigation() {
 
   let stops: SceneStop[] = []
   let accumulatedDelta = 0
-  let gestureLocked = false
+  let navigationLocked = false
   let tweenFinished = true
-  let quietTimer = 0
+  let gestureActive = false
+  let gestureEndTimer = 0
   let activeTween: gsap.core.Tween | null = null
 
   const normalizeWheelDelta = (event: WheelEvent) => {
@@ -536,20 +537,9 @@ function setupSceneWheelNavigation() {
     if (hero !== null) addStop(next, hero, 'hero')
     if (manifesto !== null) addStop(next, manifesto, 'manifesto')
 
-    // O ritual ocupa exatamente a viewport e permanece preso por três
-    // gestos de scroll antes de liberar a próxima cena.
     addPinnedStages(next, '.ritual', 3, 'ritual')
-
-    // Quatro mudanças de palavra + um estágio final de respiro.
-    // Ao chegar em TESTAR., um scroll mantém a cena e só o seguinte libera a página.
     addPinnedStages(next, '.method', 5, 'method')
-
-    // A ferramenta abre no primeiro avanço, permanece totalmente aberta
-    // no avanço seguinte e só então libera a transição para o filme.
     addPinnedStages(next, '.gloves', 3, 'gloves')
-
-    // Quatro palavras + dois estágios finais mantendo TESTE. em tela.
-    // Só o gesto posterior aos dois respiros libera a próxima seção.
     addPinnedStages(next, '.film', 6, 'film')
 
     if (promise !== null) addStop(next, promise, 'promise')
@@ -564,38 +554,25 @@ function setupSceneWheelNavigation() {
     stops = next.sort((a, b) => a.y - b.y)
   }
 
-  const armAfterGestureEnds = () => {
-    if (quietTimer) window.clearTimeout(quietTimer)
-
-    quietTimer = window.setTimeout(() => {
+  const releaseNavigationIfReady = () => {
+    if (!gestureActive && tweenFinished) {
+      navigationLocked = false
       accumulatedDelta = 0
-      if (tweenFinished) gestureLocked = false
-    }, 180)
+    }
   }
 
-  const goToStop = (target: SceneStop) => {
-    gestureLocked = true
-    tweenFinished = false
-    accumulatedDelta = 0
+  const markGestureActivity = () => {
+    gestureActive = true
 
-    activeTween?.kill()
-    activeTween = gsap.to(window, {
-      scrollTo: {
-        y: target.y,
-        autoKill: false,
-      },
-      duration: .82,
-      ease: 'power3.inOut',
-      overwrite: true,
-      onComplete: () => {
-        tweenFinished = true
-        activeTween = null
+    if (gestureEndTimer) {
+      window.clearTimeout(gestureEndTimer)
+    }
 
-        if (!quietTimer) {
-          gestureLocked = false
-        }
-      },
-    })
+    gestureEndTimer = window.setTimeout(() => {
+      gestureEndTimer = 0
+      gestureActive = false
+      releaseNavigationIfReady()
+    }, 190)
   }
 
   const findTarget = (direction: 1 | -1) => {
@@ -603,10 +580,38 @@ function setupSceneWheelNavigation() {
     const tolerance = 24
 
     if (direction > 0) {
-      return stops.find((stop) => stop.y > current + tolerance) ?? stops.at(-1)
+      return stops.find((stop) => stop.y > current + tolerance)
     }
 
-    return [...stops].reverse().find((stop) => stop.y < current - tolerance) ?? stops[0]
+    return [...stops].reverse().find((stop) => stop.y < current - tolerance)
+  }
+
+  const goToStop = (target: SceneStop) => {
+    navigationLocked = true
+    tweenFinished = false
+    accumulatedDelta = 0
+
+    activeTween?.kill()
+
+    activeTween = gsap.to(window, {
+      scrollTo: {
+        y: target.y,
+        autoKill: false,
+      },
+      duration: .78,
+      ease: 'power3.inOut',
+      overwrite: true,
+      onComplete: () => {
+        tweenFinished = true
+        activeTween = null
+        releaseNavigationIfReady()
+      },
+      onInterrupt: () => {
+        tweenFinished = true
+        activeTween = null
+        releaseNavigationIfReady()
+      },
+    })
   }
 
   const onWheel = (event: WheelEvent) => {
@@ -615,42 +620,52 @@ function setupSceneWheelNavigation() {
     const targetElement = event.target as Element | null
     if (targetElement?.closest('[data-native-scroll]')) return
 
-    event.preventDefault()
-    armAfterGestureEnds()
+    markGestureActivity()
 
-    if (gestureLocked) return
+    if (navigationLocked) {
+      event.preventDefault()
+      return
+    }
 
     accumulatedDelta += normalizeWheelDelta(event)
-    if (Math.abs(accumulatedDelta) < 18) return
+    if (Math.abs(accumulatedDelta) < 18) {
+      event.preventDefault()
+      return
+    }
 
     const direction: 1 | -1 = accumulatedDelta > 0 ? 1 : -1
     const target = findTarget(direction)
 
-    if (target) goToStop(target)
+    if (!target) {
+      accumulatedDelta = 0
+      return
+    }
+
+    event.preventDefault()
+    goToStop(target)
   }
 
-  const onResize = () => {
+  const resetNavigation = () => {
     activeTween?.kill()
     activeTween = null
-    gestureLocked = false
-    tweenFinished = true
-    accumulatedDelta = 0
-    rebuildStops()
-  }
 
-  const onQueryChange = () => {
-    activeTween?.kill()
-    activeTween = null
-    gestureLocked = false
+    if (gestureEndTimer) {
+      window.clearTimeout(gestureEndTimer)
+      gestureEndTimer = 0
+    }
+
+    navigationLocked = false
     tweenFinished = true
+    gestureActive = false
     accumulatedDelta = 0
     rebuildStops()
   }
 
   rebuildStops()
   window.addEventListener('wheel', onWheel, { passive: false })
-  window.addEventListener('resize', onResize, { passive: true })
-  sceneQuery.addEventListener('change', onQueryChange)
+  window.addEventListener('resize', resetNavigation, { passive: true })
+  window.addEventListener('pageshow', resetNavigation)
+  sceneQuery.addEventListener('change', resetNavigation)
   ScrollTrigger.addEventListener('refresh', rebuildStops)
 }
 
