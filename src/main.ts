@@ -466,7 +466,7 @@ function setupSceneWheelNavigation() {
 
       gsap.killTweensOf(beats)
 
-      beats.forEach((beat, index) => {
+      beats.forEach((beat) => {
         if (beat !== previous && beat !== next) {
           beat.classList.remove('is-active')
           gsap.set(beat, { autoAlpha: 0, y: 0 })
