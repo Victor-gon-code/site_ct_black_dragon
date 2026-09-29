@@ -386,14 +386,13 @@ main, section, article, div { min-width: 0; }
 
 .ritual {
   position: relative;
-  height: 100svh;
+  min-height: 100svh;
   background: #0b090d;
   border-top: 1px solid rgba(255,255,255,.08);
 }
 .ritual__sticky {
   position: relative;
-  top: auto;
-  height: 100svh;
+  min-height: 100svh;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr);
   gap: 0;
@@ -460,12 +459,12 @@ main, section, article, div { min-width: 0; }
 
 .method {
   position: relative;
-  height: 100svh;
+  height: 400svh;
   background: #0a090b;
 }
 .method__sticky {
-  position: relative;
-  top: auto;
+  position: sticky;
+  top: 0;
   height: 100svh;
   padding: clamp(6rem, 9vh, 8rem) clamp(1.2rem, 5vw, 5.5rem) clamp(2rem, 5vh, 4rem);
   overflow: hidden;
@@ -543,8 +542,8 @@ main, section, article, div { min-width: 0; }
 
 .gloves {
   position: relative;
-  height: 100svh;
-  padding: 0 clamp(1rem, 4vw, 4rem);
+  min-height: 100svh;
+  padding: 3svh clamp(.7rem, 2vw, 2rem);
   display: flex;
   align-items: center;
   background: #0a090b;
@@ -552,8 +551,8 @@ main, section, article, div { min-width: 0; }
 .gloves__frame {
   position: relative;
   top: auto;
-  width: min(100%, 100rem);
-  height: 82svh;
+  width: min(100%, 112rem);
+  height: 94svh;
   margin: 0 auto;
   overflow: hidden;
   clip-path: inset(8% 10% 8% 10%);
@@ -592,10 +591,10 @@ main, section, article, div { min-width: 0; }
   line-height: 1.65;
 }
 
-.film { height: 100svh; position: relative; background: #050406; }
+.film { height: 420svh; position: relative; background: #050406; }
 .film__sticky {
-  position: relative;
-  top: auto;
+  position: sticky;
+  top: 0;
   height: 100svh;
   overflow: hidden;
 }
@@ -648,14 +647,8 @@ main, section, article, div { min-width: 0; }
   line-height: .8;
   letter-spacing: -.075em;
   opacity: 0;
-  visibility: hidden;
   transform: translateY(2rem) scale(.98);
   text-shadow: 0 2px 40px rgba(0,0,0,.45);
-}
-.film__words span.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
 }
 
 .promise {
