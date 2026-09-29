@@ -409,7 +409,7 @@ function setupMotion() {
         start: 'top top',
         end: 'bottom bottom',
         onUpdate: (self) => {
-          showBeat(Math.round(self.progress * (beats.length - 1)))
+          showBeat(Math.min(beats.length - 1, Math.round(self.progress * beats.length)))
         },
       })
     }
@@ -540,7 +540,9 @@ function setupSceneWheelNavigation() {
     // gestos de scroll antes de liberar a próxima cena.
     addPinnedStages(next, '.ritual', 3, 'ritual')
 
-    addPinnedStages(next, '.method', 4, 'method')
+    // Quatro mudanças de palavra + um estágio final de respiro.
+    // Ao chegar em TESTAR., um scroll mantém a cena e só o seguinte libera a página.
+    addPinnedStages(next, '.method', 5, 'method')
 
     if (gloves !== null) addStop(next, gloves, 'gloves')
 
