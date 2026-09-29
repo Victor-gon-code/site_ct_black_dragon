@@ -386,13 +386,13 @@ main, section, article, div { min-width: 0; }
 
 .ritual {
   position: relative;
-  height: 240svh;
+  height: 100svh;
   background: #0b090d;
   border-top: 1px solid rgba(255,255,255,.08);
 }
 .ritual__sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
+  top: auto;
   height: 100svh;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr);
@@ -460,12 +460,12 @@ main, section, article, div { min-width: 0; }
 
 .method {
   position: relative;
-  height: 400svh;
+  height: 100svh;
   background: #0a090b;
 }
 .method__sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
+  top: auto;
   height: 100svh;
   padding: clamp(6rem, 9vh, 8rem) clamp(1.2rem, 5vw, 5.5rem) clamp(2rem, 5vh, 4rem);
   overflow: hidden;
@@ -543,13 +543,15 @@ main, section, article, div { min-width: 0; }
 
 .gloves {
   position: relative;
-  height: 260svh;
+  height: 100svh;
   padding: 0 clamp(1rem, 4vw, 4rem);
+  display: flex;
+  align-items: center;
   background: #0a090b;
 }
 .gloves__frame {
-  position: sticky;
-  top: 9svh;
+  position: relative;
+  top: auto;
   width: min(100%, 100rem);
   height: 82svh;
   margin: 0 auto;
@@ -590,10 +592,10 @@ main, section, article, div { min-width: 0; }
   line-height: 1.65;
 }
 
-.film { height: 520svh; position: relative; background: #050406; }
+.film { height: 100svh; position: relative; background: #050406; }
 .film__sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
+  top: auto;
   height: 100svh;
   overflow: hidden;
 }
@@ -646,8 +648,14 @@ main, section, article, div { min-width: 0; }
   line-height: .8;
   letter-spacing: -.075em;
   opacity: 0;
+  visibility: hidden;
   transform: translateY(2rem) scale(.98);
   text-shadow: 0 2px 40px rgba(0,0,0,.45);
+}
+.film__words span.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
 }
 
 .promise {
@@ -946,7 +954,7 @@ main, section, article, div { min-width: 0; }
   }
   .method__beat:last-child { border-bottom: 1px solid var(--line); }
   .method__beat h3 { font-size: clamp(3rem, 14.2vw, 4.8rem); white-space: nowrap; }
-  .gloves { height: auto; min-height: auto; padding: 5rem 0; }
+  .gloves { height: auto; min-height: auto; padding: 5rem 0; display: block; }
   .gloves__frame { position: relative; top: auto; width: 100%; height: 86svh; clip-path: inset(0); }
   .gloves__copy { left: 1.3rem; right: 1.3rem; bottom: 2.8rem; }
   .film { height: 320svh; }
