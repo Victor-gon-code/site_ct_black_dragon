@@ -958,6 +958,11 @@ main, section, article, div { min-width: 0; }
   .gloves__frame { position: relative; top: auto; width: 100%; height: 86svh; clip-path: inset(0); }
   .gloves__copy { left: 1.3rem; right: 1.3rem; bottom: 2.8rem; }
   .film { height: 320svh; }
+  .film__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
   .film__label { top: 5rem; }
   .promise { min-height: auto; padding: 8rem 1.3rem; }
   .promise__top { grid-template-columns: 1fr; }
