@@ -413,7 +413,6 @@ function setupMotion() {
     })
   })
 
-  return media
 }
 
 function setupVideoPlayback() {
@@ -528,8 +527,6 @@ setupMenu()
 setupViewportUI()
 setupYear()
 animateIntro()
-const motionMedia = setupMotion()
+setupMotion()
 setupVideoPlayback()
 setupRefreshes()
-
-void motionMedia
