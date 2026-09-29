@@ -236,6 +236,8 @@ function setupMotion() {
 
   media.add('(prefers-reduced-motion: no-preference)', () => {
     document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => {
+      if (element.closest('.hero')) return
+
       gsap.fromTo(
         element,
         { y: 28, opacity: 0 },
@@ -418,7 +420,7 @@ function setupVideoPlayback() {
   if (!video || !videoToggle) return
 
   const source = video.querySelector<HTMLSourceElement>('source')
-  let loaded = Boolean(source?.src)
+  let loaded = source?.hasAttribute('src') ?? false
   let inView = false
   let userMode: 'auto' | 'paused' | 'playing' = 'auto'
 
@@ -530,4 +532,4 @@ const motionMedia = setupMotion()
 setupVideoPlayback()
 setupRefreshes()
 
-window.addEventListener('beforeunload', () => motionMedia.revert(), { once: true })
+void motionMedia
