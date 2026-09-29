@@ -3,7 +3,8 @@ import '@fontsource/barlow-condensed/900.css'
 import './styles.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-gsap.registerPlugin(ScrollTrigger)
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
 const body = document.body
 const header = document.querySelector<HTMLElement>('[data-header]')
