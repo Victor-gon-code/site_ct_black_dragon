@@ -1,3 +1,5 @@
+import '@fontsource/barlow-condensed/400.css'
+import '@fontsource/barlow-condensed/900.css'
 import './styles.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
