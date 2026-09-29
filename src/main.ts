@@ -472,6 +472,206 @@ function setupMotion() {
   })
 }
 
+type SceneStop = {
+  y: number
+  key: string
+}
+
+function setupSceneWheelNavigation() {
+  const media = gsap.matchMedia()
+
+  media.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)', () => {
+    let stops: SceneStop[] = []
+    let gestureActive = false
+    let gestureStartY = 0
+    let gestureDelta = 0
+    let settleTimer = 0
+    let activeTween: gsap.core.Tween | null = null
+
+    const normalizeWheelDelta = (event: WheelEvent) => {
+      if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16
+      if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * window.innerHeight
+      return event.deltaY
+    }
+
+    const addStop = (collection: SceneStop[], y: number, key: string) => {
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+      const clamped = Math.max(0, Math.min(maxScroll, Math.round(y)))
+
+      if (collection.some((stop) => Math.abs(stop.y - clamped) < 24)) return
+      collection.push({ y: clamped, key })
+    }
+
+    const sectionTop = (selector: string) => {
+      const element = document.querySelector<HTMLElement>(selector)
+      if (!element) return null
+      return element.getBoundingClientRect().top + window.scrollY
+    }
+
+    const addPinnedStages = (
+      collection: SceneStop[],
+      selector: string,
+      stages: number,
+      key: string,
+    ) => {
+      const element = document.querySelector<HTMLElement>(selector)
+      if (!element || stages < 2) return
+
+      const start = element.getBoundingClientRect().top + window.scrollY
+      const distance = Math.max(0, element.offsetHeight - window.innerHeight)
+
+      for (let index = 0; index < stages; index += 1) {
+        const progress = index / (stages - 1)
+        addStop(collection, start + distance * progress, `${key}-${index + 1}`)
+      }
+    }
+
+    const rebuildStops = () => {
+      const next: SceneStop[] = []
+      const hero = sectionTop('.hero')
+      const manifesto = sectionTop('.manifesto')
+      const promise = sectionTop('.promise')
+      const contact = sectionTop('.contact')
+
+      if (hero !== null) addStop(next, hero, 'hero')
+      if (manifesto !== null) addStop(next, manifesto, 'manifesto')
+
+      addPinnedStages(next, '.ritual', 3, 'ritual')
+      addPinnedStages(next, '.method', 5, 'method')
+      addPinnedStages(next, '.gloves', 3, 'gloves')
+      addPinnedStages(next, '.film', 6, 'film')
+
+      if (promise !== null) addStop(next, promise, 'promise')
+      if (contact !== null) addStop(next, contact, 'contact')
+
+      addStop(
+        next,
+        document.documentElement.scrollHeight - window.innerHeight,
+        'end',
+      )
+
+      stops = next.sort((a, b) => a.y - b.y)
+    }
+
+    const nearestStopIndex = (y: number) => {
+      if (!stops.length) return -1
+
+      let nearest = 0
+      let nearestDistance = Math.abs(stops[0].y - y)
+
+      for (let index = 1; index < stops.length; index += 1) {
+        const distance = Math.abs(stops[index].y - y)
+        if (distance < nearestDistance) {
+          nearest = index
+          nearestDistance = distance
+        }
+      }
+
+      return nearest
+    }
+
+    const resetGesture = () => {
+      gestureActive = false
+      gestureStartY = window.scrollY
+      gestureDelta = 0
+
+      if (settleTimer) {
+        window.clearTimeout(settleTimer)
+        settleTimer = 0
+      }
+    }
+
+    const settleGesture = () => {
+      settleTimer = 0
+
+      if (!gestureActive || !stops.length) {
+        resetGesture()
+        return
+      }
+
+      const delta = gestureDelta
+      const startIndex = nearestStopIndex(gestureStartY)
+      resetGesture()
+
+      // Ignore accidental micro-movements from high-resolution touchpads.
+      if (startIndex < 0 || Math.abs(delta) < 8) return
+
+      const direction = delta > 0 ? 1 : -1
+      const targetIndex = Math.max(0, Math.min(stops.length - 1, startIndex + direction))
+      const target = stops[targetIndex]
+
+      if (!target || targetIndex === startIndex) return
+
+      const distance = Math.abs(target.y - window.scrollY)
+      const duration = gsap.utils.clamp(.32, .72, distance / Math.max(window.innerHeight, 1) * .5)
+
+      activeTween?.kill()
+      activeTween = gsap.to(window, {
+        scrollTo: {
+          y: target.y,
+          autoKill: true,
+        },
+        duration,
+        ease: 'power3.out',
+        overwrite: true,
+        onComplete: () => {
+          activeTween = null
+        },
+        onInterrupt: () => {
+          activeTween = null
+        },
+      })
+    }
+
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) return
+
+      const targetElement = event.target as Element | null
+      if (targetElement?.closest('[data-native-scroll]')) return
+
+      // Important: this listener is passive. Native touchpad/mouse scrolling is
+      // never cancelled. We only settle to the next scene after the gesture ends.
+      if (activeTween) {
+        activeTween.kill()
+        activeTween = null
+      }
+
+      if (!gestureActive) {
+        gestureActive = true
+        gestureStartY = window.scrollY
+        gestureDelta = 0
+      }
+
+      gestureDelta += normalizeWheelDelta(event)
+
+      if (settleTimer) window.clearTimeout(settleTimer)
+      settleTimer = window.setTimeout(settleGesture, 170)
+    }
+
+    const resetNavigation = () => {
+      activeTween?.kill()
+      activeTween = null
+      resetGesture()
+      rebuildStops()
+    }
+
+    rebuildStops()
+    window.addEventListener('wheel', onWheel, { passive: true })
+    window.addEventListener('resize', resetNavigation, { passive: true })
+    window.addEventListener('pageshow', resetNavigation)
+    ScrollTrigger.addEventListener('refresh', rebuildStops)
+
+    return () => {
+      activeTween?.kill()
+      resetGesture()
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('resize', resetNavigation)
+      window.removeEventListener('pageshow', resetNavigation)
+      ScrollTrigger.removeEventListener('refresh', rebuildStops)
+    }
+  })
+}
+
 function setupVideoPlayback() {
   if (!video || !videoToggle) return
 
@@ -587,5 +787,6 @@ setupViewportUI()
 setupYear()
 animateIntro()
 setupMotion()
+setupSceneWheelNavigation()
 setupVideoPlayback()
 setupRefreshes()
