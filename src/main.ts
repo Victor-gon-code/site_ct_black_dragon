@@ -332,374 +332,109 @@ function setupMotion() {
     if (frame) {
       gsap.fromTo(
         frame,
-        { clipPath: 'inset(14% 18% 14% 18%)' },
+        { clipPath: 'inset(10% 12% 10% 12%)' },
         {
           clipPath: 'inset(0% 0% 0% 0%)',
-          duration: .9,
-          ease: 'power3.out',
+          ease: 'none',
           scrollTrigger: {
             trigger: frame,
-            start: 'top 88%',
-            once: true,
+            start: 'top 94%',
+            end: 'center 54%',
+            scrub: true,
           },
         },
       )
     }
 
-    if (glovesImage) {
-      gsap.fromTo(
-        glovesImage,
-        { scale: 1.08 },
-        {
-          scale: 1,
-          duration: 1.05,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: frame,
-            start: 'top 88%',
-            once: true,
-          },
+    if (frame && glovesImage) {
+      gsap.to(glovesImage, {
+        scale: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: frame,
+          start: 'top 94%',
+          end: 'center 54%',
+          scrub: true,
         },
-      )
+      })
+    }
+
+    const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
+
+    if (words.length) {
+      let activeWord = -1
+
+      const showWord = (nextIndex: number) => {
+        const clamped = Math.max(0, Math.min(words.length - 1, nextIndex))
+        if (clamped === activeWord) return
+
+        activeWord = clamped
+        gsap.killTweensOf(words)
+
+        words.forEach((word, index) => {
+          const active = index === clamped
+          gsap.set(word, {
+            autoAlpha: active ? 1 : 0,
+            y: active ? 0 : 24,
+            scale: active ? 1 : .985,
+          })
+        })
+      }
+
+      showWord(0)
+
+      ScrollTrigger.create({
+        trigger: '.film',
+        start: 'top top',
+        end: 'bottom bottom',
+        onUpdate: (self) => {
+          const nextIndex = Math.min(
+            words.length - 1,
+            Math.floor(self.progress * words.length),
+          )
+          showWord(nextIndex)
+        },
+      })
     }
   })
 
-  media.add('(max-width: 980px) and (prefers-reduced-motion: no-preference)', () => {
-    const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
-    if (!words.length) return
+  media.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)', () => {
+    const beats = Array.from(document.querySelectorAll<HTMLElement>('[data-method-beat]'))
 
-    let activeWord = -1
+    if (!beats.length) return
 
-    const showWord = (index: number) => {
-      const clamped = Math.max(0, Math.min(words.length - 1, index))
-      if (clamped === activeWord) return
+    let activeBeat = -1
 
-      activeWord = clamped
-      gsap.killTweensOf(words)
-      words.forEach((word, wordIndex) => {
-        word.classList.toggle('is-active', wordIndex === clamped)
-        gsap.set(word, {
-          autoAlpha: wordIndex === clamped ? 1 : 0,
-          y: wordIndex === clamped ? 0 : 24,
-          scale: wordIndex === clamped ? 1 : .985,
+    const showBeat = (nextIndex: number) => {
+      const clamped = Math.max(0, Math.min(beats.length - 1, nextIndex))
+      if (clamped === activeBeat) return
+
+      activeBeat = clamped
+      gsap.killTweensOf(beats)
+
+      beats.forEach((beat, index) => {
+        const active = index === clamped
+        gsap.set(beat, {
+          autoAlpha: active ? 1 : 0,
+          y: active ? 0 : 26,
         })
       })
     }
 
-    showWord(0)
+    showBeat(0)
 
     ScrollTrigger.create({
-      trigger: '.film',
+      trigger: '.method',
       start: 'top top',
       end: 'bottom bottom',
       onUpdate: (self) => {
-        showWord(Math.min(words.length - 1, Math.floor(self.progress * words.length)))
+        const nextIndex = Math.min(
+          beats.length - 1,
+          Math.floor(self.progress * beats.length),
+        )
+        showBeat(nextIndex)
       },
     })
-  })
-}
-
-type InteractiveScene = 'ritual' | 'method' | 'gloves' | 'film'
-
-function setupSceneWheelNavigation() {
-  const media = gsap.matchMedia()
-
-  media.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)', () => {
-    const ritual = document.querySelector<HTMLElement>('.ritual')
-    const method = document.querySelector<HTMLElement>('.method')
-    const gloves = document.querySelector<HTMLElement>('.gloves')
-    const film = document.querySelector<HTMLElement>('.film')
-    const beats = Array.from(document.querySelectorAll<HTMLElement>('[data-method-beat]'))
-    const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
-
-    let methodIndex = 0
-    let methodFinalHold = 0
-    let filmIndex = 0
-    let filmFinalHold = 0
-    let ritualHold = 0
-    let glovesHold = 0
-
-    let gestureMode: 'idle' | 'consume' | 'release' = 'idle'
-    let gestureTimer = 0
-
-    const alignedScene = (): InteractiveScene | null => {
-      const tolerance = 32
-      const candidates: Array<[InteractiveScene, HTMLElement | null]> = [
-        ['ritual', ritual],
-        ['method', method],
-        ['gloves', gloves],
-        ['film', film],
-      ]
-
-      for (const [name, element] of candidates) {
-        if (!element) continue
-        const rect = element.getBoundingClientRect()
-
-        if (
-          Math.abs(rect.top) <= tolerance &&
-          rect.bottom >= window.innerHeight - tolerance
-        ) {
-          return name
-        }
-      }
-
-      return null
-    }
-
-    const resetGestureSoon = () => {
-      if (gestureTimer) window.clearTimeout(gestureTimer)
-
-      gestureTimer = window.setTimeout(() => {
-        gestureTimer = 0
-        gestureMode = 'idle'
-      }, 180)
-    }
-
-    const showBeat = (nextIndex: number, direction: 1 | -1) => {
-      if (!beats.length) return
-
-      const clamped = Math.max(0, Math.min(beats.length - 1, nextIndex))
-      const previous = beats[methodIndex]
-      const next = beats[clamped]
-
-      if (!next || clamped === methodIndex) return
-
-      gsap.killTweensOf(beats)
-
-      beats.forEach((beat) => {
-        if (beat !== previous && beat !== next) {
-          beat.classList.remove('is-active')
-          gsap.set(beat, { autoAlpha: 0, y: 0 })
-        }
-      })
-
-      if (previous) {
-        previous.classList.remove('is-active')
-        gsap.to(previous, {
-          autoAlpha: 0,
-          y: -20 * direction,
-          duration: .2,
-          ease: 'power2.in',
-          overwrite: true,
-        })
-      }
-
-      next.classList.add('is-active')
-      gsap.fromTo(
-        next,
-        { autoAlpha: 0, y: 24 * direction },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: .42,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
-
-      methodIndex = clamped
-      if (methodIndex < beats.length - 1) methodFinalHold = 0
-    }
-
-    const showWord = (nextIndex: number, direction: 1 | -1) => {
-      if (!words.length) return
-
-      const clamped = Math.max(0, Math.min(words.length - 1, nextIndex))
-      const previous = words[filmIndex]
-      const next = words[clamped]
-
-      if (!next || clamped === filmIndex) return
-
-      gsap.killTweensOf(words)
-
-      // Hard-hide every word that is not participating in this transition.
-      // This guarantees that two or more film words can never remain stacked.
-      words.forEach((word) => {
-        if (word !== previous && word !== next) {
-          word.classList.remove('is-active')
-          gsap.set(word, { autoAlpha: 0, y: 0, scale: 1 })
-        }
-      })
-
-      if (previous) {
-        previous.classList.remove('is-active')
-        gsap.to(previous, {
-          autoAlpha: 0,
-          y: -22 * direction,
-          scale: 1.01,
-          duration: .18,
-          ease: 'power2.in',
-          overwrite: true,
-        })
-      }
-
-      next.classList.add('is-active')
-      gsap.fromTo(
-        next,
-        { autoAlpha: 0, y: 24 * direction, scale: .985 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          duration: .4,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
-
-      filmIndex = clamped
-      if (filmIndex < words.length - 1) filmFinalHold = 0
-    }
-
-    // Establish one visible item in each stateful scene.
-    if (beats.length) {
-      beats.forEach((beat, index) => {
-        beat.classList.toggle('is-active', index === 0)
-        gsap.set(beat, { autoAlpha: index === 0 ? 1 : 0, y: 0 })
-      })
-    }
-
-    if (words.length) {
-      words.forEach((word, index) => {
-        word.classList.toggle('is-active', index === 0)
-        gsap.set(word, {
-          autoAlpha: index === 0 ? 1 : 0,
-          y: 0,
-          scale: 1,
-        })
-      })
-    }
-
-    const consumeSceneStep = (
-      scene: InteractiveScene,
-      direction: 1 | -1,
-    ): boolean => {
-      if (scene === 'ritual') {
-        if (direction < 0) {
-          ritualHold = 0
-          return false
-        }
-
-        if (ritualHold === 0) {
-          ritualHold = 1
-          return true
-        }
-
-        ritualHold = 0
-        return false
-      }
-
-      if (scene === 'gloves') {
-        if (direction < 0) {
-          glovesHold = 0
-          return false
-        }
-
-        if (glovesHold === 0) {
-          glovesHold = 1
-          return true
-        }
-
-        glovesHold = 0
-        return false
-      }
-
-      if (scene === 'method') {
-        if (!beats.length) return false
-
-        if (direction > 0) {
-          if (methodIndex < beats.length - 1) {
-            showBeat(methodIndex + 1, 1)
-            return true
-          }
-
-          if (methodFinalHold === 0) {
-            methodFinalHold = 1
-            return true
-          }
-
-          methodFinalHold = 0
-          return false
-        }
-
-        methodFinalHold = 0
-
-        if (methodIndex > 0) {
-          showBeat(methodIndex - 1, -1)
-          return true
-        }
-
-        return false
-      }
-
-      if (!words.length) return false
-
-      if (direction > 0) {
-        if (filmIndex < words.length - 1) {
-          showWord(filmIndex + 1, 1)
-          return true
-        }
-
-        // Keep TESTE. visible for two full gestures before allowing exit.
-        if (filmFinalHold < 2) {
-          filmFinalHold += 1
-          return true
-        }
-
-        filmFinalHold = 0
-        return false
-      }
-
-      filmFinalHold = 0
-
-      if (filmIndex > 0) {
-        showWord(filmIndex - 1, -1)
-        return true
-      }
-
-      return false
-    }
-
-    const onWheel = (event: WheelEvent) => {
-      if (event.ctrlKey || event.deltaY === 0) return
-
-      if (gestureMode !== 'idle') {
-        if (gestureMode === 'consume') event.preventDefault()
-        resetGestureSoon()
-        return
-      }
-
-      const scene = alignedScene()
-      if (!scene) return
-
-      const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1
-      const shouldConsume = consumeSceneStep(scene, direction)
-
-      gestureMode = shouldConsume ? 'consume' : 'release'
-
-      if (shouldConsume) {
-        event.preventDefault()
-      }
-
-      resetGestureSoon()
-    }
-
-    const onPageShow = () => {
-      gestureMode = 'idle'
-      if (gestureTimer) {
-        window.clearTimeout(gestureTimer)
-        gestureTimer = 0
-      }
-    }
-
-    window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('pageshow', onPageShow)
-
-    return () => {
-      if (gestureTimer) window.clearTimeout(gestureTimer)
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('pageshow', onPageShow)
-    }
   })
 }
 
@@ -818,6 +553,5 @@ setupViewportUI()
 setupYear()
 animateIntro()
 setupMotion()
-setupSceneWheelNavigation()
 setupVideoPlayback()
 setupRefreshes()
