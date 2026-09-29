@@ -275,7 +275,7 @@ function setupVideoControl() {
   const render = () => {
     const paused = video.paused
     videoToggle.textContent = paused ? 'REPRODUZIR' : 'PAUSAR'
-    videoToggle.setAttribute('aria-pressed', String(paused))
+    videoToggle.setAttribute('aria-label', paused ? 'Reproduzir vídeo do treino' : 'Pausar vídeo do treino')
   }
 
   videoToggle.addEventListener('click', () => {
