@@ -13,18 +13,32 @@ A escolha foi intencional: o site não precisa de backend nem SPA complexa. O bu
 
 ## Rodar localmente
 
+Requer Node.js compatível com o Vite 8: Node 20.19+ ou 22.12+.
+
+PowerShell / Windows:
+
+```powershell
+npm ci
+Copy-Item .env.example .env
+npm run dev
+```
+
+macOS / Linux:
+
 ```bash
-npm install
+npm ci
 cp .env.example .env
 npm run dev
 ```
 
-Build de produção:
+Validação e build de produção:
 
 ```bash
-npm run build
+npm run check
 npm run preview
 ```
+
+O repositório inclui `package-lock.json`, portanto CI e instalações limpas usam `npm ci` para reproduzir exatamente a mesma árvore de dependências.
 
 ## WhatsApp — falta apenas o número real
 
@@ -35,6 +49,8 @@ VITE_WHATSAPP_NUMBER=55DDDNUMERO
 ```
 
 Use somente números, com DDI e DDD. Exemplo de formato: `5555999999999`.
+
+Esse valor é configuração pública do frontend, não um segredo. Variáveis `VITE_*` são incorporadas ao bundle do navegador e nunca devem conter senhas, tokens privados ou chaves secretas.
 
 Sem essa variável, o site continua navegável e mostra uma mensagem discreta no CTA final avisando que o WhatsApp precisa ser configurado.
 
