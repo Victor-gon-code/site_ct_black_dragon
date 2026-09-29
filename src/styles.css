@@ -368,16 +368,24 @@ main, section, article, div { min-width: 0; }
 }
 
 .ritual {
-  min-height: 120vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr);
-  gap: 0;
+  position: relative;
+  height: 240svh;
   background: #0b090d;
   border-top: 1px solid rgba(255,255,255,.08);
 }
+.ritual__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr);
+  gap: 0;
+  overflow: hidden;
+}
 .ritual__media {
   position: relative;
-  min-height: 120vh;
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
 }
 .ritual__media::after {
@@ -833,8 +841,16 @@ main, section, article, div { min-width: 0; }
   }
   .manifesto__number { writing-mode: horizontal-tb; }
   .manifesto__side { margin-top: 3rem; }
-  .ritual { grid-template-columns: 1fr; min-height: auto; }
-  .ritual__media { min-height: 78svh; }
+  .ritual { height: auto; min-height: auto; }
+  .ritual__sticky {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+  .ritual__media { min-height: 78svh; height: 78svh; }
   .ritual__media::after { background: linear-gradient(180deg, transparent 55%, #0b090d 100%); }
   .ritual__copy { padding: 5rem 1.3rem 8rem; }
   .method { height: auto; }
@@ -915,6 +931,8 @@ main, section, article, div { min-width: 0; }
   .boot { display: none; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
   .hero__media img, .ritual__media img, .gloves__frame img { transform: none !important; }
+  .ritual { height: auto !important; }
+  .ritual__sticky { position: relative; height: auto; min-height: 100svh; }
   .method { height: auto !important; }
   .method__sticky { position: relative; height: auto; min-height: 0; overflow: visible; display: block; }
   .method__sequence { min-height: 0; margin-top: 4rem; }
