@@ -335,9 +335,9 @@ function setupMotion() {
           clipPath: 'inset(0% 0% 0% 0%)',
           ease: 'none',
           scrollTrigger: {
-            trigger: frame,
-            start: 'top 88%',
-            end: 'center 54%',
+            trigger: '.gloves',
+            start: 'top top',
+            end: () => `+=${window.innerHeight * .8}`,
             scrub: true,
           },
         },
@@ -349,9 +349,9 @@ function setupMotion() {
         scale: 1,
         ease: 'none',
         scrollTrigger: {
-          trigger: frame,
-          start: 'top 88%',
-          end: 'bottom 20%',
+          trigger: '.gloves',
+          start: 'top top',
+          end: () => `+=${window.innerHeight * .8}`,
           scrub: true,
         },
       })
@@ -462,7 +462,8 @@ function setupMotion() {
         start: 'top top',
         end: 'bottom bottom',
         onUpdate: (self) => {
-          showWord(Math.round(self.progress * (words.length - 1)))
+          const revealProgress = Math.min(1, self.progress / .6)
+          showWord(Math.round(revealProgress * (words.length - 1)))
         },
       })
     }
@@ -529,7 +530,6 @@ function setupSceneWheelNavigation() {
 
     const hero = sectionTop('.hero')
     const manifesto = sectionTop('.manifesto')
-    const gloves = sectionTop('.gloves')
     const promise = sectionTop('.promise')
     const contact = sectionTop('.contact')
 
@@ -544,9 +544,13 @@ function setupSceneWheelNavigation() {
     // Ao chegar em TESTAR., um scroll mantém a cena e só o seguinte libera a página.
     addPinnedStages(next, '.method', 5, 'method')
 
-    if (gloves !== null) addStop(next, gloves, 'gloves')
+    // A ferramenta abre no primeiro avanço, permanece totalmente aberta
+    // no avanço seguinte e só então libera a transição para o filme.
+    addPinnedStages(next, '.gloves', 3, 'gloves')
 
-    addPinnedStages(next, '.film', 4, 'film')
+    // Quatro palavras + dois estágios finais mantendo TESTE. em tela.
+    // Só o gesto posterior aos dois respiros libera a próxima seção.
+    addPinnedStages(next, '.film', 6, 'film')
 
     if (promise !== null) addStop(next, promise, 'promise')
     if (contact !== null) addStop(next, contact, 'contact')
