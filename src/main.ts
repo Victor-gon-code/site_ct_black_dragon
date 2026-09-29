@@ -3,8 +3,9 @@ import '@fontsource/barlow-condensed/900.css'
 import './styles.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 
 const body = document.body
 const header = document.querySelector<HTMLElement>('[data-header]')
@@ -355,64 +356,294 @@ function setupMotion() {
         },
       })
     }
-
-    const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
-    if (words.length) {
-      gsap.set(words, { opacity: 0, y: 28, scale: .98 })
-      gsap.set(words[0], { opacity: 1, y: 0, scale: 1 })
-
-      const filmTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.film',
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: .45,
-        },
-      })
-
-      words.forEach((word, index) => {
-        if (index === 0) return
-        const previous = words[index - 1]
-        if (!previous) return
-
-        filmTimeline
-          .to(previous, { opacity: 0, y: -26, scale: 1.02, duration: .3, ease: 'power2.in' })
-          .fromTo(word, { opacity: 0, y: 28, scale: .98 }, { opacity: 1, y: 0, scale: 1, duration: .42, ease: 'power3.out' }, '<.02')
-      })
-    }
   })
 
   media.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)', () => {
     const beats = Array.from(document.querySelectorAll<HTMLElement>('[data-method-beat]'))
-    if (!beats.length) return
 
-    beats.forEach((beat, index) => {
-      gsap.set(beat, {
-        opacity: index === 0 ? 1 : 0,
-        y: index === 0 ? 0 : 30,
+    if (beats.length) {
+      let activeBeat = 0
+
+      beats.forEach((beat, index) => {
+        gsap.set(beat, {
+          opacity: index === 0 ? 1 : 0,
+          y: index === 0 ? 0 : 28,
+        })
       })
-    })
 
-    const methodTimeline = gsap.timeline({
-      scrollTrigger: {
+      const showBeat = (nextIndex: number) => {
+        const clamped = Math.max(0, Math.min(beats.length - 1, nextIndex))
+        if (clamped === activeBeat) return
+
+        const previous = beats[activeBeat]
+        const next = beats[clamped]
+        const direction = clamped > activeBeat ? 1 : -1
+
+        if (!previous || !next) return
+
+        gsap.killTweensOf(beats)
+        gsap.to(previous, {
+          opacity: 0,
+          y: -22 * direction,
+          duration: .28,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+        gsap.fromTo(
+          next,
+          { opacity: 0, y: 28 * direction },
+          {
+            opacity: 1,
+            y: 0,
+            duration: .48,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+
+        activeBeat = clamped
+      }
+
+      ScrollTrigger.create({
         trigger: '.method',
         start: 'top top',
         end: 'bottom bottom',
-        scrub: .5,
+        onUpdate: (self) => {
+          showBeat(Math.round(self.progress * (beats.length - 1)))
+        },
+      })
+    }
+
+    const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
+
+    if (words.length) {
+      let activeWord = 0
+
+      gsap.set(words, { opacity: 0, y: 28, scale: .985 })
+      gsap.set(words[0], { opacity: 1, y: 0, scale: 1 })
+
+      const showWord = (nextIndex: number) => {
+        const clamped = Math.max(0, Math.min(words.length - 1, nextIndex))
+        if (clamped === activeWord) return
+
+        const previous = words[activeWord]
+        const next = words[clamped]
+        const direction = clamped > activeWord ? 1 : -1
+
+        if (!previous || !next) return
+
+        gsap.killTweensOf(words)
+        gsap.to(previous, {
+          opacity: 0,
+          y: -24 * direction,
+          scale: 1.015,
+          duration: .24,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+        gsap.fromTo(
+          next,
+          { opacity: 0, y: 28 * direction, scale: .985 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: .5,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+
+        activeWord = clamped
+      }
+
+      ScrollTrigger.create({
+        trigger: '.film',
+        start: 'top top',
+        end: 'bottom bottom',
+        onUpdate: (self) => {
+          showWord(Math.round(self.progress * (words.length - 1)))
+        },
+      })
+    }
+  })
+}
+
+type SceneStop = {
+  y: number
+  key: string
+}
+
+function setupSceneWheelNavigation() {
+  const sceneQuery = window.matchMedia(
+    '(min-width: 981px) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
+  )
+
+  let stops: SceneStop[] = []
+  let accumulatedDelta = 0
+  let gestureLocked = false
+  let tweenFinished = true
+  let quietTimer = 0
+  let activeTween: gsap.core.Tween | null = null
+
+  const normalizeWheelDelta = (event: WheelEvent) => {
+    if (event.deltaMode === WheelEvent.DOM_DELTA_LINE) return event.deltaY * 16
+    if (event.deltaMode === WheelEvent.DOM_DELTA_PAGE) return event.deltaY * window.innerHeight
+    return event.deltaY
+  }
+
+  const addStop = (collection: SceneStop[], y: number, key: string) => {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+    const clamped = Math.max(0, Math.min(maxScroll, Math.round(y)))
+
+    if (collection.some((stop) => Math.abs(stop.y - clamped) < 28)) return
+    collection.push({ y: clamped, key })
+  }
+
+  const sectionTop = (selector: string) => {
+    const element = document.querySelector<HTMLElement>(selector)
+    if (!element) return null
+    return element.getBoundingClientRect().top + window.scrollY
+  }
+
+  const addPinnedStages = (
+    collection: SceneStop[],
+    selector: string,
+    stages: number,
+    key: string,
+  ) => {
+    const element = document.querySelector<HTMLElement>(selector)
+    if (!element || stages < 2) return
+
+    const start = element.getBoundingClientRect().top + window.scrollY
+    const distance = Math.max(0, element.offsetHeight - window.innerHeight)
+
+    for (let index = 0; index < stages; index += 1) {
+      const progress = index / (stages - 1)
+      addStop(collection, start + distance * progress, `${key}-${index + 1}`)
+    }
+  }
+
+  const rebuildStops = () => {
+    const next: SceneStop[] = []
+
+    const hero = sectionTop('.hero')
+    const manifesto = sectionTop('.manifesto')
+    const ritual = sectionTop('.ritual')
+    const gloves = sectionTop('.gloves')
+    const promise = sectionTop('.promise')
+    const contact = sectionTop('.contact')
+
+    if (hero !== null) addStop(next, hero, 'hero')
+    if (manifesto !== null) addStop(next, manifesto, 'manifesto')
+    if (ritual !== null) addStop(next, ritual, 'ritual')
+
+    addPinnedStages(next, '.method', 4, 'method')
+
+    if (gloves !== null) addStop(next, gloves, 'gloves')
+
+    addPinnedStages(next, '.film', 4, 'film')
+
+    if (promise !== null) addStop(next, promise, 'promise')
+    if (contact !== null) addStop(next, contact, 'contact')
+
+    addStop(
+      next,
+      document.documentElement.scrollHeight - window.innerHeight,
+      'end',
+    )
+
+    stops = next.sort((a, b) => a.y - b.y)
+  }
+
+  const armAfterGestureEnds = () => {
+    if (quietTimer) window.clearTimeout(quietTimer)
+
+    quietTimer = window.setTimeout(() => {
+      accumulatedDelta = 0
+      if (tweenFinished) gestureLocked = false
+    }, 180)
+  }
+
+  const goToStop = (target: SceneStop) => {
+    gestureLocked = true
+    tweenFinished = false
+    accumulatedDelta = 0
+
+    activeTween?.kill()
+    activeTween = gsap.to(window, {
+      scrollTo: {
+        y: target.y,
+        autoKill: false,
+      },
+      duration: .82,
+      ease: 'power3.inOut',
+      overwrite: true,
+      onComplete: () => {
+        tweenFinished = true
+        activeTween = null
+
+        if (!quietTimer) {
+          gestureLocked = false
+        }
       },
     })
+  }
 
-    beats.forEach((beat, index) => {
-      if (index === 0) return
-      const previous = beats[index - 1]
-      if (!previous) return
+  const findTarget = (direction: 1 | -1) => {
+    const current = window.scrollY
+    const tolerance = 24
 
-      methodTimeline
-        .to(previous, { opacity: 0, y: -30, duration: .35, ease: 'power2.inOut' })
-        .fromTo(beat, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .45, ease: 'power2.out' }, '<.08')
-    })
-  })
+    if (direction > 0) {
+      return stops.find((stop) => stop.y > current + tolerance) ?? stops.at(-1)
+    }
 
+    return [...stops].reverse().find((stop) => stop.y < current - tolerance) ?? stops[0]
+  }
+
+  const onWheel = (event: WheelEvent) => {
+    if (!sceneQuery.matches || event.ctrlKey || !stops.length) return
+
+    const targetElement = event.target as Element | null
+    if (targetElement?.closest('[data-native-scroll]')) return
+
+    event.preventDefault()
+    armAfterGestureEnds()
+
+    if (gestureLocked) return
+
+    accumulatedDelta += normalizeWheelDelta(event)
+    if (Math.abs(accumulatedDelta) < 18) return
+
+    const direction: 1 | -1 = accumulatedDelta > 0 ? 1 : -1
+    const target = findTarget(direction)
+
+    if (target) goToStop(target)
+  }
+
+  const onResize = () => {
+    activeTween?.kill()
+    activeTween = null
+    gestureLocked = false
+    tweenFinished = true
+    accumulatedDelta = 0
+    rebuildStops()
+  }
+
+  const onQueryChange = () => {
+    activeTween?.kill()
+    activeTween = null
+    gestureLocked = false
+    tweenFinished = true
+    accumulatedDelta = 0
+    rebuildStops()
+  }
+
+  rebuildStops()
+  window.addEventListener('wheel', onWheel, { passive: false })
+  window.addEventListener('resize', onResize, { passive: true })
+  sceneQuery.addEventListener('change', onQueryChange)
+  ScrollTrigger.addEventListener('refresh', rebuildStops)
 }
 
 function setupVideoPlayback() {
@@ -528,5 +759,6 @@ setupViewportUI()
 setupYear()
 animateIntro()
 setupMotion()
+setupSceneWheelNavigation()
 setupVideoPlayback()
 setupRefreshes()
