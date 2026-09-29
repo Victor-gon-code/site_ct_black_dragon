@@ -3,9 +3,7 @@ import '@fontsource/barlow-condensed/900.css'
 import './styles.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
+gsap.registerPlugin(ScrollTrigger)
 
 const body = document.body
 const header = document.querySelector<HTMLElement>('[data-header]')
@@ -120,6 +118,10 @@ function setupMenu() {
 
   mobileQuery.addEventListener('change', (event) => {
     if (!event.matches) close()
+  })
+
+  window.addEventListener('pageshow', () => {
+    if (!isOpen()) body.style.overflow = ''
   })
 }
 
@@ -470,161 +472,6 @@ function setupMotion() {
   })
 }
 
-type SceneStop = {
-  y: number
-  key: string
-}
-
-function setupSceneWheelNavigation() {
-  const media = gsap.matchMedia()
-
-  media.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)', () => {
-    let stops: SceneStop[] = []
-    let activeTween: gsap.core.Tween | null = null
-    let transitionLocked = false
-    let gestureConsumed = false
-
-    const addStop = (collection: SceneStop[], y: number, key: string) => {
-      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
-      const clamped = Math.max(0, Math.min(maxScroll, Math.round(y)))
-
-      if (collection.some((stop) => Math.abs(stop.y - clamped) < 28)) return
-      collection.push({ y: clamped, key })
-    }
-
-    const sectionTop = (selector: string) => {
-      const element = document.querySelector<HTMLElement>(selector)
-      if (!element) return null
-      return element.getBoundingClientRect().top + window.scrollY
-    }
-
-    const addPinnedStages = (
-      collection: SceneStop[],
-      selector: string,
-      stages: number,
-      key: string,
-    ) => {
-      const element = document.querySelector<HTMLElement>(selector)
-      if (!element || stages < 2) return
-
-      const start = element.getBoundingClientRect().top + window.scrollY
-      const distance = Math.max(0, element.offsetHeight - window.innerHeight)
-
-      for (let index = 0; index < stages; index += 1) {
-        const progress = index / (stages - 1)
-        addStop(collection, start + distance * progress, `${key}-${index + 1}`)
-      }
-    }
-
-    const rebuildStops = () => {
-      const next: SceneStop[] = []
-      const hero = sectionTop('.hero')
-      const manifesto = sectionTop('.manifesto')
-      const promise = sectionTop('.promise')
-      const contact = sectionTop('.contact')
-
-      if (hero !== null) addStop(next, hero, 'hero')
-      if (manifesto !== null) addStop(next, manifesto, 'manifesto')
-
-      addPinnedStages(next, '.ritual', 3, 'ritual')
-      addPinnedStages(next, '.method', 5, 'method')
-      addPinnedStages(next, '.gloves', 3, 'gloves')
-      addPinnedStages(next, '.film', 6, 'film')
-
-      if (promise !== null) addStop(next, promise, 'promise')
-      if (contact !== null) addStop(next, contact, 'contact')
-
-      addStop(
-        next,
-        document.documentElement.scrollHeight - window.innerHeight,
-        'end',
-      )
-
-      stops = next.sort((a, b) => a.y - b.y)
-    }
-
-    const findTarget = (direction: 1 | -1) => {
-      const current = window.scrollY
-      const tolerance = 24
-
-      if (direction > 0) {
-        return stops.find((stop) => stop.y > current + tolerance)
-      }
-
-      return [...stops].reverse().find((stop) => stop.y < current - tolerance)
-    }
-
-    const goToStop = (direction: 1 | -1) => {
-      if (transitionLocked || gestureConsumed) return
-
-      const target = findTarget(direction)
-      if (!target) return
-
-      gestureConsumed = true
-      transitionLocked = true
-      activeTween?.kill()
-
-      activeTween = gsap.to(window, {
-        scrollTo: {
-          y: target.y,
-          autoKill: false,
-        },
-        duration: .78,
-        ease: 'power3.inOut',
-        overwrite: true,
-        onComplete: () => {
-          transitionLocked = false
-          activeTween = null
-        },
-        onInterrupt: () => {
-          transitionLocked = false
-          activeTween = null
-        },
-      })
-    }
-
-    rebuildStops()
-
-    const observer = ScrollTrigger.observe({
-      target: window,
-      type: 'wheel',
-      tolerance: 10,
-      wheelSpeed: 1,
-      preventDefault: true,
-      onChangeY: (self) => {
-        if (transitionLocked || gestureConsumed) return
-        if (Math.abs(self.deltaY) < 1) return
-
-        goToStop(self.deltaY > 0 ? 1 : -1)
-      },
-      onStop: () => {
-        gestureConsumed = false
-      },
-      onStopDelay: .18,
-    })
-
-    const onResize = () => {
-      activeTween?.kill()
-      activeTween = null
-      transitionLocked = false
-      gestureConsumed = false
-      rebuildStops()
-    }
-
-    window.addEventListener('resize', onResize, { passive: true })
-    window.addEventListener('pageshow', onResize)
-    ScrollTrigger.addEventListener('refresh', rebuildStops)
-
-    return () => {
-      activeTween?.kill()
-      observer.kill()
-      window.removeEventListener('resize', onResize)
-      window.removeEventListener('pageshow', onResize)
-      ScrollTrigger.removeEventListener('refresh', rebuildStops)
-    }
-  })
-}
-
 function setupVideoPlayback() {
   if (!video || !videoToggle) return
 
@@ -724,6 +571,8 @@ function setupRefreshes() {
   } else {
     window.addEventListener('load', refresh, { once: true })
   }
+
+  window.addEventListener('pageshow', refresh)
 }
 
 function setupYear() {
@@ -738,6 +587,5 @@ setupViewportUI()
 setupYear()
 animateIntro()
 setupMotion()
-setupSceneWheelNavigation()
 setupVideoPlayback()
 setupRefreshes()
