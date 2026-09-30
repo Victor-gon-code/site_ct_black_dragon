@@ -1140,8 +1140,8 @@ main, section, article, div { min-width: 0; }
     grid-template-columns: 1fr;
     height: auto;
     min-height: 100svh;
-    padding-top: max(5.5rem, calc(var(--header-h) + var(--safe-top) + 1rem));
-    padding-bottom: max(3rem, calc(1.5rem + var(--safe-bottom)));
+    padding-top: max(5rem, calc(var(--header-h) + var(--safe-top) + .75rem));
+    padding-bottom: max(2.5rem, calc(1.25rem + var(--safe-bottom)));
     align-content: center;
     overflow: visible;
   }
@@ -1156,10 +1156,10 @@ main, section, article, div { min-width: 0; }
     grid-template-columns: 1fr;
     overflow: visible;
   }
-  .ritual__media { min-height: 64svh; height: 64svh; }
+  .ritual__media { min-height: 0; height: min(64svh, 38rem); }
   .ritual__media::after { background: linear-gradient(180deg, transparent 50%, #0b090d 100%); }
   .ritual__copy {
-    padding: 3.5rem 1.3rem 4rem;
+    padding: 3.25rem 1.3rem 3rem;
   }
   .ritual__copy h2 { margin-top: 1rem; margin-bottom: 1.45rem; }
   .ritual__trace { margin-top: 2.2rem; }
@@ -1172,18 +1172,18 @@ main, section, article, div { min-width: 0; }
     height: auto;
     min-height: 0;
     display: block;
-    padding: 5rem 1.3rem 6rem;
+    padding: 4rem 1.3rem 5rem;
     overflow: visible;
   }
   .method__sticky::before { width: 80vw; height: 80vw; right: -40vw; top: 20%; }
-  .method__sequence { min-height: 0; margin-top: 3.5rem; }
+  .method__sequence { min-height: 0; margin-top: 3rem; }
   .method__beat {
     position: relative;
     inset: auto;
     opacity: 1;
     transform: none;
-    min-height: 17rem;
-    padding: 2.5rem 0;
+    min-height: 15rem;
+    padding: 2.25rem 0;
     border-top: 1px solid var(--line);
     pointer-events: auto;
     grid-template-columns: 1fr;
@@ -1319,8 +1319,21 @@ main, section, article, div { min-width: 0; }
   .hero__bottom p { max-width: 19rem; }
   .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
   .promise__top h2 { font-size: clamp(2.15rem, 10.8vw, 5.2rem); }
-  .manifesto { padding-left: 1.3rem; padding-right: 1.3rem; }
-  .ritual__media { min-height: 70svh; }
+  .manifesto {
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+  }
+  .ritual__copy {
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
+  }
+  .ritual__trace { margin-top: 1.8rem; }
+  .method__sticky {
+    padding-top: 3.5rem;
+    padding-bottom: 4.5rem;
+  }
+  .method__sequence { margin-top: 2.5rem; }
+  .ritual__media { height: min(58svh, 32rem); }
   .ritual__media img { object-position: 56% 50%; }
   .gloves__frame img { object-position: 48% 54%; }
   .film__video {
@@ -1494,8 +1507,8 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 380px) {
-  .ritual__copy { padding: 3rem 1.1rem 3.5rem; }
-  .method__sticky { padding: 4.25rem 1.1rem 5rem; }
+  .ritual__copy { padding: 2.5rem 1.1rem 2.6rem; }
+  .method__sticky { padding: 3.1rem 1.1rem 4rem; }
   .hero__title { font-size: clamp(2.9rem, 15.8vw, 3.9rem); }
   .hero__bottom p { font-size: .86rem; line-height: 1.5; }
   .method__beat h3 { font-size: clamp(2.8rem, 13.5vw, 4rem); white-space: normal; }
