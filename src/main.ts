@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger)
 const body = document.body
 const header = document.querySelector<HTMLElement>('[data-header]')
 const menuToggle = document.querySelector<HTMLButtonElement>('.menu-toggle')
+const menuLabel = menuToggle?.querySelector<HTMLElement>('span')
 const nav = document.querySelector<HTMLElement>('#site-nav')
 const heroImage = document.querySelector<HTMLImageElement>('.hero__media img')
 const boot = document.querySelector<HTMLElement>('.boot')
@@ -42,7 +43,11 @@ function setupMenu() {
   const close = (restoreFocus = false) => {
     if (!isOpen()) return
     menuToggle.setAttribute('aria-expanded', 'false')
+    menuToggle.setAttribute('aria-label', 'Abrir menu')
+    if (menuLabel) menuLabel.textContent = 'MENU'
     nav.classList.remove('is-open')
+    header?.classList.remove('menu-open')
+    body.classList.remove('menu-open')
     body.style.overflow = previousOverflow
     if (restoreFocus) menuToggle.focus()
   }
@@ -51,12 +56,12 @@ function setupMenu() {
     if (isOpen()) return
     previousOverflow = body.style.overflow
     menuToggle.setAttribute('aria-expanded', 'true')
+    menuToggle.setAttribute('aria-label', 'Fechar menu')
+    if (menuLabel) menuLabel.textContent = 'FECHAR'
     nav.classList.add('is-open')
+    header?.classList.add('menu-open')
+    body.classList.add('menu-open')
     body.style.overflow = 'hidden'
-
-    requestAnimationFrame(() => {
-      nav.querySelector<HTMLAnchorElement>('a[href]')?.focus()
-    })
   }
 
   menuToggle.addEventListener('click', () => {
