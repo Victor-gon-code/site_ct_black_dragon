@@ -22,9 +22,13 @@
 html {
   scroll-behavior: auto;
   background: var(--bg);
+  max-width: 100%;
+  overflow-x: clip;
 }
 body {
   margin: 0;
+  max-width: 100%;
+  min-height: 100%;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--body);
@@ -211,7 +215,7 @@ main, section, article, div { min-width: 0; }
 .hero {
   position: relative;
   min-height: 100svh;
-  height: 100svh;
+  height: 100dvh;
   overflow: hidden;
   isolation: isolate;
   background: #0b090d;
@@ -1099,15 +1103,19 @@ main, section, article, div { min-width: 0; }
     display: inline-flex;
     position: relative;
     z-index: 3;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: flex-end;
     color: var(--ink);
-    padding-right: .2rem;
+    padding: .65rem .2rem .65rem .65rem;
   }
   .menu-toggle span { display: block; }
   .site-nav.is-open {
     display: flex;
     position: fixed;
-    inset: calc(var(--header-h) + var(--safe-top)) 0 auto;
-    min-height: calc(100svh - var(--header-h) - var(--safe-top));
+    inset: calc(var(--header-h) + var(--safe-top)) 0 0;
+    min-height: 0;
+    height: auto;
     background: rgba(8,7,9,.97);
     flex-direction: column;
     align-items: flex-start;
@@ -1119,7 +1127,7 @@ main, section, article, div { min-width: 0; }
   .site-nav.is-open a {
     font-family: var(--display);
     font-weight: 900;
-    font-size: clamp(3rem, 11vw, 6rem);
+    font-size: clamp(2.55rem, 10vw, 5.4rem);
     line-height: .9;
     letter-spacing: -.04em;
   }
@@ -1297,14 +1305,20 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 700px) {
+  .section-index,
+  .section-kicker {
+    font-size: .54rem;
+    letter-spacing: .17em;
+    line-height: 1.45;
+  }
   .hero__media img { object-position: 50% 48%; }
   .hero__veil { background: linear-gradient(180deg, rgba(4,3,5,.3) 0%, rgba(4,3,5,.06) 42%, rgba(4,3,5,.84) 100%); }
   .hero__copy { bottom: max(2.3rem, calc(1.2rem + var(--safe-bottom))); }
   .eyebrow { margin-bottom: .2rem; }
   .hero__title { font-size: clamp(3.55rem, 18vw, 6.2rem); line-height: .8; }
   .hero__bottom p { max-width: 19rem; }
-  .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .coach__content h2 { font-size: clamp(3.2rem, 15vw, 5.5rem); }
-  .promise__top h2 { font-size: clamp(2.9rem, 12vw, 5.2rem); }
+  .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
+  .promise__top h2 { font-size: clamp(2.15rem, 10.8vw, 5.2rem); }
   .manifesto { padding-left: 1.3rem; padding-right: 1.3rem; }
   .ritual__media { min-height: 70svh; }
   .ritual__media img { object-position: 56% 50%; }
@@ -1415,6 +1429,21 @@ main, section, article, div { min-width: 0; }
 
 }
 
+@media (max-width: 700px) and (max-height: 650px) and (orientation: portrait) {
+  .hero__copy {
+    bottom: max(1.25rem, calc(.75rem + var(--safe-bottom)));
+    gap: .75rem;
+  }
+  .hero__title { font-size: clamp(2.8rem, 14vw, 4.4rem); }
+  .hero__bottom p {
+    margin-bottom: .8rem;
+    font-size: .82rem;
+    line-height: 1.42;
+  }
+  .eyebrow { font-size: .54rem; }
+  .text-link { font-size: .6rem; }
+}
+
 @media (max-width: 980px) and (max-height: 560px) and (orientation: landscape) {
   :root { --footer-h: 5.25rem; }
 
@@ -1471,7 +1500,7 @@ main, section, article, div { min-width: 0; }
   .hero__bottom p { font-size: .86rem; line-height: 1.5; }
   .method__beat h3 { font-size: clamp(2.8rem, 13.5vw, 4rem); white-space: normal; }
   .film__words span { font-size: clamp(3.75rem, 18vw, 5.3rem); }
-  .promise__top h2 { font-size: clamp(2.6rem, 10.8vw, 3.9rem); }
+  .promise__top h2 { font-size: clamp(2.05rem, 10.2vw, 3.6rem); }
   .contact h2 { font-size: clamp(3.35rem, 18vw, 5.2rem); }
   .contact__cta { font-size: clamp(1.4rem, 7vw, 1.9rem); }
   .contact__phone { font-size: .68rem; }
