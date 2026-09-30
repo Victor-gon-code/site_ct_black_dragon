@@ -1080,6 +1080,49 @@ main, section, article, div { min-width: 0; }
   .promise__lines { margin-top: 6rem; }
   .promise__line { grid-template-columns: 3rem 1fr; padding: 1.7rem 0; }
   .promise__line i { grid-column: 2; margin-top: -.4rem; }
+  .coach {
+    min-height: auto;
+    padding: 8rem 1.3rem;
+  }
+  .coach::before {
+    right: -12vw;
+    top: 2rem;
+    font-size: min(70vw, 27rem);
+  }
+  .coach__rail {
+    display: grid;
+    justify-content: start;
+    gap: .7rem;
+  }
+  .coach__heading {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 4.5rem;
+  }
+  .coach__story {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 4.5rem 0 0;
+  }
+  .coach__story p {
+    padding: 1.6rem 0;
+  }
+  .coach__story p + p {
+    border-top-color: rgba(255,255,255,.08);
+  }
+  .coach__facts {
+    grid-template-columns: 1fr;
+    margin-top: 4rem;
+  }
+  .coach__facts > div {
+    min-height: 8rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .coach__facts > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
   .contact {
     height: 100svh;
     min-height: 100svh;
