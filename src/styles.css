@@ -721,20 +721,6 @@ main, section, article, div { min-width: 0; }
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(.9rem, 2vh, 1.7rem);
 }
-.coach::before {
-  content: "16";
-  position: absolute;
-  right: -3vw;
-  top: 1vh;
-  font-family: var(--display);
-  font-size: min(36vw, 34rem);
-  font-weight: 900;
-  line-height: .8;
-  letter-spacing: -.08em;
-  color: rgba(255,255,255,.018);
-  pointer-events: none;
-  user-select: none;
-}
 .coach__rail {
   position: relative;
   z-index: 4;
@@ -1196,11 +1182,6 @@ main, section, article, div { min-width: 0; }
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: .75rem;
-  }
-  .coach::before {
-    right: -12vw;
-    top: 4rem;
-    font-size: min(70vw, 27rem);
   }
   .coach__rail {
     display: flex;
