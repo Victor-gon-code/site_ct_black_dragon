@@ -1133,6 +1133,16 @@ main, section, article, div { min-width: 0; }
     letter-spacing: -.04em;
   }
   .scroll-rail { display: none; }
+  .manifesto,
+  .promise {
+    padding-left: max(1.3rem, calc(var(--safe-left) + .35rem));
+    padding-right: max(1.3rem, calc(var(--safe-right) + .35rem));
+  }
+  .ritual__copy,
+  .method__sticky {
+    padding-left: max(1.3rem, calc(var(--safe-left) + .35rem));
+    padding-right: max(1.3rem, calc(var(--safe-right) + .35rem));
+  }
   .hero__copy { grid-template-columns: 1fr; bottom: max(2.4rem, calc(1.2rem + var(--safe-bottom))); }
   .hero__title { font-size: clamp(4.5rem, 15vw, 8rem); }
   .hero__bottom { max-width: 23rem; padding-bottom: 0; }
@@ -1227,13 +1237,19 @@ main, section, article, div { min-width: 0; }
   .promise__lines { margin-top: 4rem; }
   .promise__line { grid-template-columns: 1fr; padding: 1.55rem 0; gap: .45rem; }
   .promise__line i { grid-column: auto; margin-top: 0; }
+  .promise__note {
+    margin-top: 3.5rem;
+    max-width: 32rem;
+    font-size: clamp(1.55rem, 5.8vw, 2.45rem);
+  }
   .coach {
     height: 100svh;
     min-height: 100svh;
     padding:
       max(calc(var(--header-h) + var(--safe-top) + .35rem), 4.6rem)
-      1.3rem
-      max(1rem, calc(.6rem + var(--safe-bottom)));
+      max(1.3rem, calc(var(--safe-right) + .35rem))
+      max(1rem, calc(.6rem + var(--safe-bottom)))
+      max(1.3rem, calc(var(--safe-left) + .35rem));
     overflow: hidden;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
@@ -1378,8 +1394,9 @@ main, section, article, div { min-width: 0; }
     min-height: 100svh;
     padding:
       max(calc(var(--header-h) + var(--safe-top) + .25rem), 4.25rem)
-      1.15rem
-      max(.65rem, var(--safe-bottom));
+      max(1.15rem, calc(var(--safe-right) + .35rem))
+      max(.65rem, var(--safe-bottom))
+      max(1.15rem, calc(var(--safe-left) + .35rem));
   }
   .coach__rail {
     font-size: .42rem;
@@ -1517,6 +1534,11 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 380px) {
+  .coach__rail {
+    display: grid;
+    justify-content: start;
+    gap: .22rem;
+  }
   .film__label { gap: .65rem; align-items: flex-start; }
   .film__control { min-height: 40px; padding: .5rem .6rem; font-size: .5rem; }
   .ritual__copy { padding: 2.5rem 1.1rem 2.6rem; }
@@ -1537,8 +1559,44 @@ main, section, article, div { min-width: 0; }
   .coach__content h2 { font-size: clamp(2.35rem, 10.5vw, 3.5rem); }
   .coach__story p { font-size: .6rem; line-height: 1.35; }
   .coach__story .coach__statement { font-size: .76rem; }
-  .coach__facts > div { min-height: 3.2rem; padding-top: .3rem; padding-bottom: .3rem; }
+  .coach__facts > div { min-height: 3.65rem; padding-top: .35rem; padding-bottom: .35rem; }
   .coach__ring-shot figcaption { display: none; }
+}
+
+@media (max-width: 700px) and (max-height: 620px) and (orientation: portrait) {
+  .coach {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    padding-bottom: max(1.5rem, calc(.8rem + var(--safe-bottom)));
+  }
+  .coach__layout {
+    grid-template-rows: auto auto;
+    align-content: start;
+  }
+  .coach__media {
+    height: 25svh;
+    min-height: 8.5rem;
+  }
+  .coach__story p {
+    font-size: .62rem;
+    line-height: 1.38;
+  }
+  .coach__facts > div { min-height: 3.8rem; }
+
+  .contact {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: max(calc(var(--header-h) + var(--safe-top) + 1.25rem), 5.25rem);
+    padding-bottom: max(calc(var(--footer-h) + var(--safe-bottom) + 1.4rem), 9rem);
+  }
+  .contact h2 {
+    margin-top: 1rem;
+    font-size: clamp(3rem, 16vw, 4.6rem);
+  }
+  .contact__cta { min-height: 4.6rem; }
 }
 
 @media (hover: none) {
