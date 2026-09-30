@@ -619,6 +619,12 @@ main, section, article, div { min-width: 0; }
 }
 .film__words span {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max-content;
+  max-width: calc(100% - 2.6rem);
+  text-align: center;
   font-family: var(--display);
   font-weight: 900;
   font-size: clamp(5.2rem, 15vw, 16rem);
@@ -1079,9 +1085,24 @@ main, section, article, div { min-width: 0; }
     --footer-h: 7.5rem;
   }
 
-  .site-header { grid-template-columns: 1fr auto; min-height: calc(var(--header-h) + var(--safe-top)); }
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: calc(var(--header-h) + var(--safe-top));
+    width: 100%;
+    background: rgba(9,8,10,.7);
+    border-bottom-color: rgba(255,255,255,.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
   .header__center, .site-nav { display: none; }
-  .menu-toggle { display: inline-flex; }
+  .menu-toggle {
+    display: inline-flex;
+    position: relative;
+    z-index: 3;
+    color: var(--ink);
+    padding-right: .2rem;
+  }
+  .menu-toggle span { display: block; }
   .site-nav.is-open {
     display: flex;
     position: fixed;
@@ -1127,20 +1148,27 @@ main, section, article, div { min-width: 0; }
     grid-template-columns: 1fr;
     overflow: visible;
   }
-  .ritual__media { min-height: 78svh; height: 78svh; }
-  .ritual__media::after { background: linear-gradient(180deg, transparent 55%, #0b090d 100%); }
-  .ritual__copy { padding: 5rem 1.3rem 8rem; }
-  .method { height: auto; }
+  .ritual__media { min-height: 64svh; height: 64svh; }
+  .ritual__media::after { background: linear-gradient(180deg, transparent 50%, #0b090d 100%); }
+  .ritual__copy {
+    padding: 3.5rem 1.3rem 4rem;
+  }
+  .ritual__copy h2 { margin-top: 1rem; margin-bottom: 1.45rem; }
+  .ritual__trace { margin-top: 2.2rem; }
+  .method {
+    height: auto;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
   .method__sticky {
     position: relative;
     height: auto;
     min-height: 0;
     display: block;
-    padding: 8rem 1.3rem;
+    padding: 5rem 1.3rem 6rem;
     overflow: visible;
   }
   .method__sticky::before { width: 80vw; height: 80vw; right: -40vw; top: 20%; }
-  .method__sequence { min-height: 0; margin-top: 5rem; }
+  .method__sequence { min-height: 0; margin-top: 3.5rem; }
   .method__beat {
     position: relative;
     inset: auto;
@@ -1158,13 +1186,29 @@ main, section, article, div { min-width: 0; }
   .gloves { height: auto; min-height: auto; padding: 5rem 0; display: block; }
   .gloves__frame { position: relative; top: auto; width: 100%; height: 86svh; clip-path: inset(0); }
   .gloves__copy { left: 1.3rem; right: 1.3rem; bottom: 2.8rem; }
-  .film { height: 320svh; }
+  .film {
+    height: 360svh;
+    height: 360dvh;
+    background: #050406;
+  }
   .film__sticky {
     position: sticky;
     top: 0;
     height: 100svh;
+    height: 100dvh;
+    min-height: 100svh;
+    overflow: hidden;
+    background: #050406;
   }
-  .film__label { top: 5rem; }
+  .film__video {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+  }
+  .film__label { top: max(calc(var(--header-h) + var(--safe-top) + .8rem), 5rem); }
   .promise { min-height: auto; padding: 7rem 1.3rem; }
   .promise__top { grid-template-columns: 1fr; gap: 1.5rem; }
   .promise__intro { margin: 0; max-width: 38rem; }
@@ -1265,8 +1309,25 @@ main, section, article, div { min-width: 0; }
   .ritual__media { min-height: 70svh; }
   .ritual__media img { object-position: 56% 50%; }
   .gloves__frame img { object-position: 48% 54%; }
-  .film__video { object-position: center; }
-  .film__words span { font-size: clamp(4.5rem, 21vw, 7.5rem); }
+  .film__video {
+    object-position: 50% 0%;
+    height: 166%;
+    min-height: 166%;
+    top: 0;
+    bottom: auto;
+    transform: none;
+  }
+  .film__words {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+  .film__words span {
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    font-size: clamp(4.1rem, 19vw, 7rem);
+  }
   .film__label { left: 1.3rem; right: 1.3rem; }
   .promise__line strong { font-size: clamp(1.9rem, 8.5vw, 2.8rem); }
   .contact h2 { font-size: clamp(4rem, 20vw, 7.5rem); }
@@ -1404,6 +1465,8 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 380px) {
+  .ritual__copy { padding: 3rem 1.1rem 3.5rem; }
+  .method__sticky { padding: 4.25rem 1.1rem 5rem; }
   .hero__title { font-size: clamp(2.9rem, 15.8vw, 3.9rem); }
   .hero__bottom p { font-size: .86rem; line-height: 1.5; }
   .method__beat h3 { font-size: clamp(2.8rem, 13.5vw, 4rem); white-space: normal; }
