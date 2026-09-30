@@ -17,38 +17,17 @@ const videoToggle = document.querySelector<HTMLButtonElement>('[data-video-toggl
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 
 function configureWhatsApp() {
-  const raw = String(import.meta.env.VITE_WHATSAPP_NUMBER ?? '').replace(/\D/g, '')
+  const fallbackNumber = '555592236719'
+  const envNumber = String(import.meta.env.VITE_WHATSAPP_NUMBER ?? '').replace(/\D/g, '')
+  const raw = envNumber.length >= 10 && envNumber.length <= 15 ? envNumber : fallbackNumber
   const links = document.querySelectorAll<HTMLAnchorElement>('[data-whatsapp]')
-  const status = document.querySelector<HTMLElement>('[data-whatsapp-status]')
-  const validNumber = raw.length >= 10 && raw.length <= 15
-
-  if (validNumber) {
-    const text = encodeURIComponent('Olá! Vim pelo site da CT Black Dragon e quero saber como agendar uma aula de boxe.')
-    links.forEach((link) => {
-      link.href = `https://wa.me/${raw}?text=${text}`
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      link.removeAttribute('aria-disabled')
-    })
-    status?.remove()
-    return
-  }
+  const text = encodeURIComponent('Oi, Willian! Vi o site da CT Black Dragon e queria saber como funciona para fazer um primeiro treino.')
 
   links.forEach((link) => {
-    link.setAttribute('aria-disabled', 'true')
-    link.addEventListener('click', (event) => {
-      event.preventDefault()
-      if (!status || reducedMotionQuery.matches) return
-
-      status.animate(
-        [
-          { opacity: 1, transform: 'translateY(0)' },
-          { opacity: .55, transform: 'translateY(2px)' },
-          { opacity: 1, transform: 'translateY(0)' },
-        ],
-        { duration: 360, easing: 'ease-out' },
-      )
-    })
+    link.href = `https://wa.me/${raw}?text=${text}`
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    link.removeAttribute('aria-disabled')
   })
 }
 
