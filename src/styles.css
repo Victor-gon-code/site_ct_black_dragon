@@ -604,6 +604,7 @@ main, section, article, div { min-width: 0; }
   align-items: center;
 }
 .film__control {
+  min-height: 44px;
   border: 1px solid rgba(255,255,255,.24);
   background: rgba(6,5,7,.35);
   padding: .58rem .78rem;
@@ -1193,10 +1194,13 @@ main, section, article, div { min-width: 0; }
   .method__beat h3 { font-size: clamp(3rem, 14.2vw, 4.8rem); white-space: nowrap; }
   .gloves { height: auto; min-height: auto; padding: 5rem 0; display: block; }
   .gloves__frame { position: relative; top: auto; width: 100%; height: 86svh; clip-path: inset(0); }
-  .gloves__copy { left: 1.3rem; right: 1.3rem; bottom: 2.8rem; }
+  .gloves__copy {
+    left: max(1.3rem, calc(var(--safe-left) + .35rem));
+    right: max(1.3rem, calc(var(--safe-right) + .35rem));
+    bottom: max(2.8rem, calc(1.8rem + var(--safe-bottom)));
+  }
   .film {
     height: 360svh;
-    height: 360dvh;
     background: #050406;
   }
   .film__sticky {
@@ -1304,6 +1308,17 @@ main, section, article, div { min-width: 0; }
   .site-footer p:last-child { justify-self: start; }
 }
 
+@media (max-width: 980px) and (orientation: portrait) {
+  .film__video {
+    object-position: 50% 0%;
+    height: 166%;
+    min-height: 166%;
+    top: 0;
+    bottom: auto;
+    transform: none;
+  }
+}
+
 @media (max-width: 700px) {
   .section-index,
   .section-kicker {
@@ -1336,14 +1351,6 @@ main, section, article, div { min-width: 0; }
   .ritual__media { height: min(58svh, 32rem); }
   .ritual__media img { object-position: 56% 50%; }
   .gloves__frame img { object-position: 48% 54%; }
-  .film__video {
-    object-position: 50% 0%;
-    height: 166%;
-    min-height: 166%;
-    top: 0;
-    bottom: auto;
-    transform: none;
-  }
   .film__words {
     position: absolute;
     inset: 0;
@@ -1355,7 +1362,10 @@ main, section, article, div { min-width: 0; }
     translate: -50% -50%;
     font-size: clamp(4.1rem, 19vw, 7rem);
   }
-  .film__label { left: 1.3rem; right: 1.3rem; }
+  .film__label {
+    left: max(1.3rem, calc(var(--safe-left) + .35rem));
+    right: max(1.3rem, calc(var(--safe-right) + .35rem));
+  }
   .promise__line strong { font-size: clamp(1.9rem, 8.5vw, 2.8rem); }
   .contact h2 { font-size: clamp(4rem, 20vw, 7.5rem); }
   .contact__cta { min-height: 5.2rem; font-size: clamp(1.65rem, 7.6vw, 2.6rem); padding-left: 0; padding-right: 0; gap: 1rem; }
@@ -1507,6 +1517,8 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 380px) {
+  .film__label { gap: .65rem; align-items: flex-start; }
+  .film__control { min-height: 40px; padding: .5rem .6rem; font-size: .5rem; }
   .ritual__copy { padding: 2.5rem 1.1rem 2.6rem; }
   .method__sticky { padding: 3.1rem 1.1rem 4rem; }
   .hero__title { font-size: clamp(2.9rem, 15.8vw, 3.9rem); }
