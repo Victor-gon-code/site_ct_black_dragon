@@ -883,6 +883,13 @@ main, section, article, div { min-width: 0; }
 .coach__story p:first-child {
   color: rgba(255,255,255,.78);
 }
+.coach__story .coach__statement {
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1.55vw, 1.65rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: #d8cfd5;
+}
 .coach__facts {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1174,59 +1181,73 @@ main, section, article, div { min-width: 0; }
   .promise__line { grid-template-columns: 3rem 1fr; padding: 1.7rem 0; }
   .promise__line i { grid-column: 2; margin-top: -.4rem; }
   .coach {
-    height: auto;
-    min-height: auto;
-    padding: 7rem 1.3rem;
-    overflow: visible;
-    display: block;
+    height: 100svh;
+    min-height: 100svh;
+    padding:
+      max(calc(var(--header-h) + var(--safe-top) + .35rem), 4.6rem)
+      1.3rem
+      max(1rem, calc(.6rem + var(--safe-bottom)));
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: .75rem;
   }
   .coach::before {
     right: -12vw;
-    top: 5rem;
+    top: 4rem;
     font-size: min(70vw, 27rem);
   }
   .coach__rail {
-    display: grid;
-    justify-content: start;
-    gap: .65rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: .6rem;
+    font-size: .5rem;
   }
   .coach__layout {
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    margin-top: 3.5rem;
+    min-height: 0;
+    grid-template-columns: minmax(13rem, .82fr) minmax(0, 1.18fr);
+    gap: clamp(1.4rem, 3vw, 3rem);
+    margin-top: 0;
+    align-items: center;
   }
   .coach__media {
     width: 100%;
-    height: min(70svh, 42rem);
+    height: min(68svh, 38rem);
   }
-  .coach__portrait { right: 15%; }
+  .coach__portrait { right: 13%; }
   .coach__ring-shot {
-    width: min(42%, 13rem);
+    width: min(42%, 11rem);
     bottom: 5%;
   }
   .coach__content h2 {
-    font-size: clamp(3.5rem, 12vw, 6.6rem);
+    font-size: clamp(3rem, 8vw, 5.8rem);
   }
   .coach__story {
     grid-template-columns: 1fr;
-    gap: 0;
-    margin-top: 2.6rem;
+    gap: .75rem;
+    margin-top: 1.25rem;
   }
   .coach__story p {
-    padding: 1.35rem 0;
-    font-size: .98rem;
-    line-height: 1.68;
+    padding-top: .75rem;
+    font-size: clamp(.72rem, 1.45vw, .9rem);
+    line-height: 1.5;
   }
-  .coach__story p + p { border-top-color: rgba(255,255,255,.08); }
+  .coach__story .coach__statement {
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    line-height: 1.04;
+  }
   .coach__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 2.7rem;
+    margin-top: 1.1rem;
   }
   .coach__facts > div {
-    min-height: 7rem;
-    padding: 1rem .8rem;
+    min-height: 4.8rem;
+    padding: .65rem .6rem;
   }
   .coach__facts > div:first-child { padding-left: 0; }
+  .coach__facts strong { font-size: clamp(1.35rem, 3.4vw, 2.3rem); }
+  .coach__facts i { font-size: .64rem; }
   .contact {
     height: 100svh;
     min-height: 100svh;
@@ -1267,16 +1288,93 @@ main, section, article, div { min-width: 0; }
   .brand__type { font-size: .66rem; }
   .brand img { width: 32px; height: 32px; }
   .site-header.is-solid { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-  .coach { padding: 6.5rem 1.3rem; }
-  .coach__layout { gap: 3.2rem; margin-top: 2.8rem; }
-  .coach__media { height: min(64svh, 34rem); }
-  .coach__portrait { right: 13%; }
-  .coach__ring-shot { width: 43%; }
-  .coach__content h2 { font-size: clamp(3.15rem, 15vw, 5.3rem); }
-  .coach__facts { grid-template-columns: 1fr; }
-  .coach__facts > div { min-height: 5.8rem; padding-left: 0; padding-right: 0; }
-  .coach__facts > div + div { border-left: 0; border-top: 1px solid var(--line); }
+  .coach {
+    height: 100svh;
+    min-height: 100svh;
+    padding:
+      max(calc(var(--header-h) + var(--safe-top) + .25rem), 4.25rem)
+      1.15rem
+      max(.65rem, var(--safe-bottom));
+  }
+  .coach__rail {
+    font-size: .42rem;
+    letter-spacing: .14em;
+    gap: .55rem;
+  }
+  .coach__layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 30svh) auto;
+    gap: 1.15rem;
+    align-content: center;
+  }
+  .coach__media {
+    height: 30svh;
+    min-height: 0;
+    width: 100%;
+  }
+  .coach__portrait {
+    inset: 0 16% 0 0;
+  }
+  .coach__portrait img { object-position: 50% 26%; }
+  .coach__ring-shot {
+    width: min(39%, 8.5rem);
+    bottom: 4%;
+  }
+  .coach__ring-shot figcaption {
+    font-size: .36rem;
+    left: .5rem;
+    right: .4rem;
+    bottom: .45rem;
+  }
+  .coach__name {
+    margin-bottom: .35rem;
+    font-size: .52rem;
+  }
+  .coach__content h2 {
+    font-size: clamp(2.75rem, 12.6vw, 4.45rem);
+    line-height: .78;
+  }
+  .coach__story {
+    margin-top: .7rem;
+    gap: .45rem;
+  }
+  .coach__story p {
+    padding-top: .55rem;
+    font-size: clamp(.64rem, 2.55vw, .76rem);
+    line-height: 1.42;
+  }
+  .coach__story .coach__statement {
+    font-size: clamp(.82rem, 3.3vw, 1rem);
+    line-height: 1.03;
+  }
+  .coach__facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: .7rem;
+  }
+  .coach__facts > div {
+    min-height: 3.8rem;
+    padding: .45rem .35rem;
+  }
+  .coach__facts > div:first-child { padding-left: 0; }
+  .coach__facts > div + div {
+    border-left: 1px solid var(--line);
+    border-top: 0;
+  }
+  .coach__facts span { font-size: .4rem; letter-spacing: .14em; }
+  .coach__facts strong { font-size: clamp(1.05rem, 5vw, 1.45rem); }
+  .coach__facts i { font-size: .52rem; line-height: 1.2; }
 
+
+}
+
+@media (max-width: 700px) and (max-height: 720px) {
+  .coach__layout { grid-template-rows: minmax(0, 24svh) auto; gap: .7rem; }
+  .coach__media { height: 24svh; }
+  .coach__content h2 { font-size: clamp(2.35rem, 10.5vw, 3.5rem); }
+  .coach__story p { font-size: .6rem; line-height: 1.35; }
+  .coach__story .coach__statement { font-size: .76rem; }
+  .coach__facts > div { min-height: 3.2rem; padding-top: .3rem; padding-bottom: .3rem; }
+  .coach__ring-shot figcaption { display: none; }
 }
 
 @media (hover: none) {
