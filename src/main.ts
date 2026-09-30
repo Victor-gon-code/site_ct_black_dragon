@@ -305,39 +305,6 @@ function setupMotion() {
       })
     }
 
-    const frame = document.querySelector<HTMLElement>('[data-gloves-frame]')
-    const glovesImage = frame?.querySelector<HTMLElement>('img')
-
-    if (frame) {
-      gsap.fromTo(
-        frame,
-        { clipPath: 'inset(10% 12% 10% 12%)' },
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: frame,
-            start: 'top 94%',
-            end: 'center 54%',
-            scrub: true,
-          },
-        },
-      )
-    }
-
-    if (frame && glovesImage) {
-      gsap.to(glovesImage, {
-        scale: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: frame,
-          start: 'top 94%',
-          end: 'center 54%',
-          scrub: true,
-        },
-      })
-    }
-
     const words = Array.from(document.querySelectorAll<HTMLElement>('[data-film-word]'))
 
     if (words.length) {
@@ -372,6 +339,41 @@ function setupMotion() {
             Math.floor(self.progress * words.length),
           )
           showWord(nextIndex)
+        },
+      })
+    }
+  })
+
+  media.add('(min-width: 701px) and (prefers-reduced-motion: no-preference)', () => {
+    const frame = document.querySelector<HTMLElement>('[data-gloves-frame]')
+    const glovesImage = frame?.querySelector<HTMLElement>('img')
+
+    if (!frame) return
+
+    gsap.fromTo(
+      frame,
+      { clipPath: 'inset(10% 12% 10% 12%)' },
+      {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: frame,
+          start: 'top 94%',
+          end: 'center 54%',
+          scrub: true,
+        },
+      },
+    )
+
+    if (glovesImage) {
+      gsap.to(glovesImage, {
+        scale: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: frame,
+          start: 'top 94%',
+          end: 'center 54%',
+          scrub: true,
         },
       })
     }
