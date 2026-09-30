@@ -102,6 +102,18 @@ function setupMenu() {
   window.addEventListener('pageshow', () => {
     if (!isOpen()) body.style.overflow = ''
   })
+
+  let lastWidth = window.innerWidth
+  window.addEventListener(
+    'resize',
+    () => {
+      const width = window.innerWidth
+      if (Math.abs(width - lastWidth) < 24) return
+      lastWidth = width
+      if (isOpen()) close()
+    },
+    { passive: true },
+  )
 }
 
 function setupViewportUI() {
@@ -508,6 +520,17 @@ function setupVideoPlayback() {
 
 function setupRefreshes() {
   const refresh = () => ScrollTrigger.refresh()
+  let resizeTimer = 0
+  let lastWidth = window.innerWidth
+
+  const refreshAfterWidthChange = () => {
+    const width = window.innerWidth
+    if (Math.abs(width - lastWidth) < 24) return
+    lastWidth = width
+
+    if (resizeTimer) window.clearTimeout(resizeTimer)
+    resizeTimer = window.setTimeout(refresh, 180)
+  }
 
   if (document.fonts) {
     void document.fonts.ready.then(refresh)
@@ -520,6 +543,7 @@ function setupRefreshes() {
   }
 
   window.addEventListener('pageshow', refresh)
+  window.addEventListener('resize', refreshAfterWidthChange, { passive: true })
 }
 
 function setupYear() {
