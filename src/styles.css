@@ -359,12 +359,16 @@ main, section, article, div { min-width: 0; }
 }
 .manifesto__number {
   align-self: center;
+  transform: translateY(-6vh);
   writing-mode: vertical-rl;
   font-size: .6rem;
   letter-spacing: .32em;
   color: rgba(255,255,255,.28);
 }
-.manifesto__copy { align-self: center; }
+.manifesto__copy {
+  align-self: center;
+  transform: translateY(-6vh);
+}
 .manifesto__title {
   margin: 1.4rem 0 0;
   max-width: 10.5ch;
@@ -1126,7 +1130,8 @@ main, section, article, div { min-width: 0; }
     align-content: center;
     overflow: visible;
   }
-  .manifesto__number { writing-mode: horizontal-tb; align-self: auto; }
+  .manifesto__number { writing-mode: horizontal-tb; align-self: auto; transform: none; }
+  .manifesto__copy { transform: none; }
   .manifesto__side { margin-top: 1.5rem; align-self: auto; }
   .ritual { height: auto; min-height: auto; }
   .ritual__sticky {
