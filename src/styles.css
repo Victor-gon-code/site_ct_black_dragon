@@ -118,6 +118,7 @@ main, section, article, div { min-width: 0; }
   justify-self: start;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: .7rem;
   width: max-content;
 }
@@ -289,6 +290,7 @@ main, section, article, div { min-width: 0; }
 .text-link {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 1.1rem;
   padding-bottom: .35rem;
   border-bottom: 1px solid rgba(255,255,255,.38);
@@ -968,6 +970,9 @@ main, section, article, div { min-width: 0; }
 .contact__phone {
   position: relative;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   width: max-content;
   margin-bottom: 1.35rem;
   padding-bottom: .18rem;
@@ -1351,8 +1356,8 @@ main, section, article, div { min-width: 0; }
   .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
   .promise__top h2 { font-size: clamp(2.15rem, 10.8vw, 5.2rem); }
   .manifesto {
-    padding-left: 1.3rem;
-    padding-right: 1.3rem;
+    padding-left: max(1.3rem, calc(var(--safe-left) + .35rem));
+    padding-right: max(1.3rem, calc(var(--safe-right) + .35rem));
   }
   .ritual__copy {
     padding-top: 2.75rem;
@@ -1563,7 +1568,7 @@ main, section, article, div { min-width: 0; }
   .coach__ring-shot figcaption { display: none; }
 }
 
-@media (max-width: 700px) and (max-height: 620px) and (orientation: portrait) {
+@media (max-width: 700px) and (max-height: 680px) and (orientation: portrait) {
   .coach {
     height: auto;
     min-height: 100svh;
