@@ -668,7 +668,7 @@ main, section, article, div { min-width: 0; }
 .gloves__copy h2,
 .promise__top h2,
 .promise__note,
-.coach__heading h2,
+.coach__content h2,
 .contact h2 { text-wrap: balance; }
 
 .promise__top h2 {
@@ -721,21 +721,29 @@ main, section, article, div { min-width: 0; }
 
 .coach {
   position: relative;
-  min-height: 120svh;
-  padding: clamp(7rem, 11vw, 11rem) clamp(1.2rem, 5vw, 5.5rem);
+  height: 100svh;
+  min-height: 100svh;
+  padding:
+    max(calc(var(--header-h) + var(--safe-top) + .6rem), 5.5vh)
+    clamp(1.2rem, 4vw, 4.5rem)
+    max(1.8rem, calc(1rem + var(--safe-bottom)));
   overflow: hidden;
   background:
-    radial-gradient(circle at 82% 20%, rgba(122,75,134,.11), transparent 28%),
+    radial-gradient(circle at 77% 20%, rgba(122,75,134,.12), transparent 30%),
+    radial-gradient(circle at 18% 78%, rgba(214,166,109,.055), transparent 28%),
     #08070a;
   border-top: 1px solid rgba(255,255,255,.08);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(.9rem, 2vh, 1.7rem);
 }
 .coach::before {
   content: "16";
   position: absolute;
-  right: -2vw;
-  top: -8vw;
+  right: -3vw;
+  top: 1vh;
   font-family: var(--display);
-  font-size: min(44vw, 42rem);
+  font-size: min(36vw, 34rem);
   font-weight: 900;
   line-height: .8;
   letter-spacing: -.08em;
@@ -745,94 +753,167 @@ main, section, article, div { min-width: 0; }
 }
 .coach__rail {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  padding-bottom: 1.15rem;
+  padding-bottom: .8rem;
   border-bottom: 1px solid var(--line-strong);
-  font-size: .58rem;
+  font-size: .56rem;
   letter-spacing: .2em;
   color: rgba(255,255,255,.42);
 }
-.coach__heading {
+.coach__layout {
   position: relative;
   z-index: 2;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 12rem minmax(0, 1fr);
-  gap: 2rem;
-  align-items: end;
-  margin-top: clamp(4.5rem, 7vw, 7rem);
+  grid-template-columns: minmax(18rem, .82fr) minmax(0, 1.18fr);
+  gap: clamp(2.2rem, 5vw, 6rem);
+  align-items: center;
+}
+.coach__media {
+  position: relative;
+  width: min(100%, 34rem);
+  height: min(72svh, 44rem);
+  min-height: 0;
+  align-self: center;
+}
+.coach__portrait,
+.coach__ring-shot {
+  margin: 0;
+  overflow: hidden;
+  background: #0b090d;
+}
+.coach__portrait {
+  position: absolute;
+  inset: 0 12% 0 0;
+}
+.coach__portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(4,3,5,.02) 0%, rgba(4,3,5,.04) 58%, rgba(4,3,5,.38) 100%),
+    linear-gradient(90deg, rgba(4,3,5,.12), transparent 34%);
+}
+.coach__portrait img,
+.coach__ring-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.coach__portrait img {
+  object-position: 50% 30%;
+  filter: saturate(.9) contrast(1.04) brightness(.9);
+  transform: scale(1.015);
+}
+.coach__ring-shot {
+  position: absolute;
+  right: 0;
+  bottom: 4%;
+  z-index: 3;
+  width: min(45%, 13.5rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 1.6rem 4rem rgba(0,0,0,.5);
+}
+.coach__ring-shot img {
+  object-position: center;
+  filter: saturate(.82) contrast(1.06) brightness(.86);
+}
+.coach__ring-shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(3,3,5,.74) 100%);
+  pointer-events: none;
+}
+.coach__ring-shot figcaption {
+  position: absolute;
+  z-index: 2;
+  left: .75rem;
+  right: .65rem;
+  bottom: .65rem;
+  font-size: .45rem;
+  line-height: 1.4;
+  letter-spacing: .17em;
+  color: rgba(255,255,255,.76);
+}
+.coach__content {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  max-height: 100%;
+  display: grid;
+  align-content: center;
 }
 .coach__name {
-  margin: 0 0 .65rem;
-  font-size: .68rem;
+  margin: 0 0 .7rem;
+  font-size: .66rem;
   letter-spacing: .26em;
   color: rgba(255,255,255,.62);
 }
-.coach__heading h2 {
+.coach__content h2 {
   margin: 0;
   max-width: 9.5ch;
   font-family: var(--display);
-  font-size: clamp(4.7rem, 9vw, 10rem);
+  font-size: clamp(3.8rem, 6.7vw, 7.5rem);
   font-weight: 900;
-  line-height: .8;
+  line-height: .79;
   letter-spacing: -.065em;
   text-transform: uppercase;
 }
 .coach__story {
-  position: relative;
-  z-index: 2;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 3.5rem);
-  margin: clamp(5rem, 8vw, 8rem) 0 0 14rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.4vw, 2.6rem);
+  margin-top: clamp(1.35rem, 2.8vh, 2.3rem);
 }
 .coach__story p {
   margin: 0;
-  padding-top: 1.35rem;
+  padding-top: .95rem;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: clamp(.94rem, 1.05vw, 1.08rem);
-  line-height: 1.78;
+  font-size: clamp(.79rem, .86vw, .96rem);
+  line-height: 1.58;
 }
 .coach__story p:first-child {
-  color: rgba(255,255,255,.8);
+  color: rgba(255,255,255,.78);
 }
 .coach__facts {
-  position: relative;
-  z-index: 2;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: clamp(5rem, 8vw, 8rem);
+  margin-top: clamp(1.2rem, 2.6vh, 2.1rem);
   border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
 }
 .coach__facts > div {
-  min-height: 10rem;
-  padding: 1.35rem clamp(1rem, 2vw, 2rem) 1.45rem;
+  min-height: 5.6rem;
+  padding: .75rem clamp(.6rem, 1vw, 1rem) .85rem;
   display: grid;
   align-content: center;
-  gap: .35rem;
+  gap: .22rem;
 }
-.coach__facts > div + div {
-  border-left: 1px solid var(--line);
-}
+.coach__facts > div:first-child { padding-left: 0; }
+.coach__facts > div + div { border-left: 1px solid var(--line); }
 .coach__facts span {
-  font-size: .56rem;
-  letter-spacing: .22em;
+  font-size: .5rem;
+  letter-spacing: .2em;
   color: rgba(255,255,255,.4);
 }
 .coach__facts strong {
   font-family: var(--display);
-  font-size: clamp(2.25rem, 4vw, 4.5rem);
+  font-size: clamp(1.55rem, 2.6vw, 2.9rem);
   line-height: .88;
-  letter-spacing: -.045em;
+  letter-spacing: -.04em;
 }
 .coach__facts i {
   font-style: normal;
   color: var(--muted);
-  font-size: .82rem;
+  font-size: .72rem;
 }
 
 .contact {
@@ -981,6 +1062,18 @@ main, section, article, div { min-width: 0; }
   .manifesto__title {
     font-size: clamp(3.8rem, 7vw, 7.2rem);
   }
+  .coach {
+    padding-top: max(calc(var(--header-h) + var(--safe-top) + .35rem), 4.2vh);
+    padding-bottom: max(1.2rem, calc(.5rem + var(--safe-bottom)));
+    gap: .65rem;
+  }
+  .coach__media { height: min(68svh, 37rem); }
+  .coach__content h2 { font-size: clamp(3.25rem, 5.9vw, 5.9rem); }
+  .coach__story { margin-top: 1rem; }
+  .coach__story p { font-size: .78rem; line-height: 1.48; padding-top: .7rem; }
+  .coach__facts { margin-top: .9rem; }
+  .coach__facts > div { min-height: 4.7rem; padding-top: .55rem; padding-bottom: .6rem; }
+
 }
 
 @media (max-width: 980px) {
@@ -1081,48 +1174,59 @@ main, section, article, div { min-width: 0; }
   .promise__line { grid-template-columns: 3rem 1fr; padding: 1.7rem 0; }
   .promise__line i { grid-column: 2; margin-top: -.4rem; }
   .coach {
+    height: auto;
     min-height: auto;
-    padding: 8rem 1.3rem;
+    padding: 7rem 1.3rem;
+    overflow: visible;
+    display: block;
   }
   .coach::before {
     right: -12vw;
-    top: 2rem;
+    top: 5rem;
     font-size: min(70vw, 27rem);
   }
   .coach__rail {
     display: grid;
     justify-content: start;
-    gap: .7rem;
+    gap: .65rem;
   }
-  .coach__heading {
+  .coach__layout {
     grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-top: 4.5rem;
+    gap: 4rem;
+    margin-top: 3.5rem;
+  }
+  .coach__media {
+    width: 100%;
+    height: min(70svh, 42rem);
+  }
+  .coach__portrait { right: 15%; }
+  .coach__ring-shot {
+    width: min(42%, 13rem);
+    bottom: 5%;
+  }
+  .coach__content h2 {
+    font-size: clamp(3.5rem, 12vw, 6.6rem);
   }
   .coach__story {
     grid-template-columns: 1fr;
     gap: 0;
-    margin: 4.5rem 0 0;
+    margin-top: 2.6rem;
   }
   .coach__story p {
-    padding: 1.6rem 0;
+    padding: 1.35rem 0;
+    font-size: .98rem;
+    line-height: 1.68;
   }
-  .coach__story p + p {
-    border-top-color: rgba(255,255,255,.08);
-  }
+  .coach__story p + p { border-top-color: rgba(255,255,255,.08); }
   .coach__facts {
-    grid-template-columns: 1fr;
-    margin-top: 4rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 2.7rem;
   }
   .coach__facts > div {
-    min-height: 8rem;
-    padding-left: 0;
-    padding-right: 0;
+    min-height: 7rem;
+    padding: 1rem .8rem;
   }
-  .coach__facts > div + div {
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
+  .coach__facts > div:first-child { padding-left: 0; }
   .contact {
     height: 100svh;
     min-height: 100svh;
@@ -1148,7 +1252,7 @@ main, section, article, div { min-width: 0; }
   .eyebrow { margin-bottom: .2rem; }
   .hero__title { font-size: clamp(3.55rem, 18vw, 6.2rem); line-height: .8; }
   .hero__bottom p { max-width: 19rem; }
-  .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .promise__top h2, .coach__heading h2 { font-size: clamp(3.2rem, 15vw, 5.5rem); }
+  .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .promise__top h2, .coach__content h2 { font-size: clamp(3.2rem, 15vw, 5.5rem); }
   .manifesto { padding-left: 1.3rem; padding-right: 1.3rem; }
   .ritual__media { min-height: 70svh; }
   .ritual__media img { object-position: 56% 50%; }
@@ -1163,6 +1267,16 @@ main, section, article, div { min-width: 0; }
   .brand__type { font-size: .66rem; }
   .brand img { width: 32px; height: 32px; }
   .site-header.is-solid { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .coach { padding: 6.5rem 1.3rem; }
+  .coach__layout { gap: 3.2rem; margin-top: 2.8rem; }
+  .coach__media { height: min(64svh, 34rem); }
+  .coach__portrait { right: 13%; }
+  .coach__ring-shot { width: 43%; }
+  .coach__content h2 { font-size: clamp(3.15rem, 15vw, 5.3rem); }
+  .coach__facts { grid-template-columns: 1fr; }
+  .coach__facts > div { min-height: 5.8rem; padding-left: 0; padding-right: 0; }
+  .coach__facts > div + div { border-left: 0; border-top: 1px solid var(--line); }
+
 }
 
 @media (hover: none) {
