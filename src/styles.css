@@ -270,8 +270,8 @@ main, section, article, div { min-width: 0; }
   font-size: clamp(4.4rem, 8.7vw, 8.9rem);
   font-weight: 900;
   font-stretch: condensed;
-  line-height: .8;
-  letter-spacing: -.06em;
+  line-height: .88;
+  letter-spacing: -.025em;
   text-transform: uppercase;
   text-wrap: balance;
 }
@@ -430,8 +430,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-weight: 900;
   font-size: clamp(4rem, 6.5vw, 7rem);
-  line-height: .84;
-  letter-spacing: -.055em;
+  line-height: .94;
+  letter-spacing: -.02em;
 }
 .ritual__copy p {
   max-width: 29rem;
@@ -484,8 +484,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-weight: 900;
   font-size: clamp(3.8rem, 6.5vw, 7rem);
-  line-height: .88;
-  letter-spacing: -.055em;
+  line-height: .96;
+  letter-spacing: -.02em;
   text-transform: uppercase;
 }
 .method__intro em { font-style: normal; color: #9d86a6; }
@@ -512,8 +512,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-weight: 900;
   font-size: clamp(5rem, 8.6vw, 9.5rem);
-  line-height: .78;
-  letter-spacing: -.065em;
+  line-height: .92;
+  letter-spacing: -.02em;
 }
 .method__beat h3,
 .method__beat p { min-width: 0; max-width: 100%; }
@@ -851,8 +851,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-size: clamp(3.8rem, 6.7vw, 7.5rem);
   font-weight: 900;
-  line-height: .79;
-  letter-spacing: -.065em;
+  line-height: .9;
+  letter-spacing: -.025em;
   text-transform: uppercase;
 }
 .coach__story {
@@ -875,8 +875,8 @@ main, section, article, div { min-width: 0; }
 .coach__story .coach__statement {
   font-family: var(--display);
   font-size: clamp(1.1rem, 1.55vw, 1.65rem);
-  line-height: 1.05;
-  letter-spacing: -.02em;
+  line-height: 1.14;
+  letter-spacing: 0;
   color: #d8cfd5;
 }
 .coach__facts {
@@ -903,8 +903,8 @@ main, section, article, div { min-width: 0; }
 .coach__facts strong {
   font-family: var(--display);
   font-size: clamp(1.55rem, 2.6vw, 2.9rem);
-  line-height: .88;
-  letter-spacing: -.04em;
+  line-height: .96;
+  letter-spacing: -.01em;
 }
 .coach__facts i {
   font-style: normal;
@@ -1271,7 +1271,12 @@ main, section, article, div { min-width: 0; }
     column-gap: 0;
   }
   .method__beat:last-child { border-bottom: 1px solid var(--line); }
-  .method__beat h3 { font-size: clamp(3rem, 14.2vw, 4.8rem); white-space: nowrap; }
+  .method__beat h3 {
+    font-size: clamp(3rem, 14.2vw, 4.8rem);
+    line-height: .96;
+    letter-spacing: -.015em;
+    white-space: nowrap;
+  }
   .gloves { height: auto; min-height: auto; padding: 5rem 0; display: block; }
   .gloves__frame { position: relative; top: auto; width: 100%; height: 86svh; clip-path: inset(0); }
   .gloves__copy {
@@ -1432,9 +1437,18 @@ main, section, article, div { min-width: 0; }
   .hero__veil { background: linear-gradient(180deg, rgba(4,3,5,.3) 0%, rgba(4,3,5,.06) 42%, rgba(4,3,5,.84) 100%); }
   .hero__copy { bottom: max(2.3rem, calc(1.2rem + var(--safe-bottom))); }
   .eyebrow { margin-bottom: .2rem; }
-  .hero__title { font-size: clamp(3.55rem, 18vw, 6.2rem); line-height: .8; }
+  .hero__title {
+    font-size: clamp(3.55rem, 18vw, 6.2rem);
+    line-height: .9;
+    letter-spacing: -.02em;
+  }
   .hero__bottom p { max-width: 19rem; }
   .manifesto__title, .ritual__copy h2, .method__intro h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
+  .ritual__copy h2,
+  .method__intro h2 {
+    line-height: .95;
+    letter-spacing: -.015em;
+  }
   .gloves__copy {
     max-width: none;
   }
@@ -1540,7 +1554,8 @@ main, section, article, div { min-width: 0; }
   }
   .coach__content h2 {
     font-size: clamp(2.75rem, 12.6vw, 4.45rem);
-    line-height: .78;
+    line-height: .9;
+    letter-spacing: -.02em;
   }
   .coach__story {
     margin-top: .7rem;
@@ -1553,7 +1568,8 @@ main, section, article, div { min-width: 0; }
   }
   .coach__story .coach__statement {
     font-size: clamp(.82rem, 3.3vw, 1rem);
-    line-height: 1.03;
+    line-height: 1.13;
+    letter-spacing: 0;
   }
   .coach__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1569,7 +1585,11 @@ main, section, article, div { min-width: 0; }
     border-top: 0;
   }
   .coach__facts span { font-size: .4rem; letter-spacing: .14em; }
-  .coach__facts strong { font-size: clamp(1.05rem, 5vw, 1.45rem); }
+  .coach__facts strong {
+    font-size: clamp(1.05rem, 5vw, 1.45rem);
+    line-height: .98;
+    letter-spacing: 0;
+  }
   .coach__facts i { font-size: .52rem; line-height: 1.2; }
 
 
@@ -1670,9 +1690,18 @@ main, section, article, div { min-width: 0; }
   .film__control { min-height: 40px; padding: .5rem .6rem; font-size: .5rem; }
   .ritual__copy { padding: 2.5rem 1.1rem 2.6rem; }
   .method__sticky { padding: 3.1rem 1.1rem 4rem; }
-  .hero__title { font-size: clamp(2.9rem, 15.8vw, 3.9rem); }
+  .hero__title {
+    font-size: clamp(2.9rem, 15.8vw, 3.9rem);
+    line-height: .92;
+    letter-spacing: -.015em;
+  }
   .hero__bottom p { font-size: .86rem; line-height: 1.5; }
-  .method__beat h3 { font-size: clamp(2.8rem, 13.5vw, 4rem); white-space: normal; }
+  .method__beat h3 {
+    font-size: clamp(2.8rem, 13.5vw, 4rem);
+    line-height: .98;
+    letter-spacing: 0;
+    white-space: normal;
+  }
   .film__words span { font-size: clamp(3.75rem, 18vw, 5.3rem); }
   .film__words span:last-child { font-size: clamp(2.95rem, 14.5vw, 4.5rem); }
   .promise__top h2 {
