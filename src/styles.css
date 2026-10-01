@@ -1620,7 +1620,8 @@ main, section, article, div { min-width: 0; }
   }
   .hero__title {
     font-size: clamp(3rem, 8vw, 5.25rem);
-    line-height: .8;
+    line-height: .9;
+    letter-spacing: -.015em;
   }
   .hero__bottom {
     align-self: end;
