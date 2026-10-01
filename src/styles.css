@@ -47,20 +47,6 @@ button { color: inherit; }
 main, section, article, div { min-width: 0; }
 ::selection { background: rgba(214,166,109,.95); color: #0b0a0c; }
 
-.skip-link {
-  position: fixed;
-  top: .75rem;
-  left: .75rem;
-  z-index: 1000;
-  transform: translateY(-160%);
-  background: var(--ink);
-  color: var(--bg);
-  padding: .7rem 1rem;
-  border-radius: 0;
-  transition: transform .2s ease;
-}
-.skip-link:focus { transform: translateY(0); }
-
 .boot {
   position: fixed;
   inset: 0;
