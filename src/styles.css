@@ -173,7 +173,11 @@ main, section, article, div { min-width: 0; }
 .menu-toggle[aria-expanded="true"] i { transform: rotate(45deg); }
 .menu-toggle[aria-expanded="true"] i::after { translate: 0 0; transform: rotate(-90deg); }
 .site-nav {
-  justify-self: end;
+  position: fixed;
+  z-index: 101;
+  top: var(--safe-top);
+  right: max(clamp(1.1rem, 3vw, 3.5rem), var(--safe-right));
+  height: var(--header-h);
   display: flex;
   align-items: center;
   gap: 1.55rem;
@@ -1117,6 +1121,9 @@ main, section, article, div { min-width: 0; }
     -webkit-backdrop-filter: none;
     border-bottom-color: rgba(255,255,255,.12);
   }
+  body.menu-open {
+    overscroll-behavior: none;
+  }
   .site-header.menu-open .brand,
   .site-header.menu-open .menu-toggle {
     position: relative;
@@ -1136,6 +1143,10 @@ main, section, article, div { min-width: 0; }
     min-height: 44px;
     justify-content: flex-end;
     color: var(--ink);
+    background: transparent !important;
+    box-shadow: none;
+    border-radius: 0;
+    -webkit-tap-highlight-color: transparent;
     padding: .65rem .2rem .65rem .65rem;
   }
   .menu-toggle span {
@@ -1146,15 +1157,13 @@ main, section, article, div { min-width: 0; }
 
   .site-nav.is-open {
     display: flex;
-    position: absolute;
-    z-index: 2;
-    top: 100%;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: calc(100dvh - var(--header-h) - var(--safe-top));
+    position: fixed;
+    z-index: 99;
+    inset: calc(var(--header-h) + var(--safe-top)) 0 0 0;
+    width: 100vw;
+    height: auto;
     min-height: 0;
-    max-height: calc(100dvh - var(--header-h) - var(--safe-top));
+    max-height: none;
     padding:
       clamp(1.5rem, 5.5vh, 3.5rem)
       max(1.35rem, calc(var(--safe-right) + .5rem))
