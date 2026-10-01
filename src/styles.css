@@ -1287,7 +1287,6 @@ main, section, article, div { min-width: 0; }
     position: sticky;
     top: 0;
     height: 100svh;
-    height: 100dvh;
     min-height: 100svh;
     overflow: hidden;
     background: #050406;
@@ -1422,6 +1421,16 @@ main, section, article, div { min-width: 0; }
 }
 
 @media (max-width: 700px) {
+  .hero {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  .film__sticky {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
   .section-index,
   .section-kicker {
     font-size: .54rem;
@@ -1433,9 +1442,12 @@ main, section, article, div { min-width: 0; }
   .hero__copy { bottom: max(2.3rem, calc(1.2rem + var(--safe-bottom))); }
   .eyebrow { margin-bottom: .2rem; }
   .hero__title {
-    font-size: clamp(3.55rem, 18vw, 6.2rem);
+    font-size: clamp(3.45rem, 16.5vw, 6rem);
     line-height: .9;
     letter-spacing: -.02em;
+  }
+  .hero__title span {
+    padding-right: 0;
   }
   .hero__bottom p { max-width: 19rem; }
   .manifesto__title, .ritual__copy h2, .method__intro h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
