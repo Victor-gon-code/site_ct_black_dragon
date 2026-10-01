@@ -565,8 +565,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-size: clamp(4rem, 8vw, 8.6rem);
   font-weight: 900;
-  line-height: .8;
-  letter-spacing: -.06em;
+  line-height: .86;
+  letter-spacing: -.035em;
 }
 .gloves__copy p {
   max-width: 28rem;
@@ -627,11 +627,14 @@ main, section, article, div { min-width: 0; }
 .film__words span {
   position: absolute;
   top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: max-content;
-  max-width: calc(100% - 2.6rem);
+  left: 0;
+  right: 0;
+  translate: 0 -50%;
+  width: auto;
+  max-width: none;
+  padding-inline: max(1.3rem, calc(var(--safe-left) + .35rem));
   text-align: center;
+  white-space: nowrap;
   font-family: var(--display);
   font-weight: 900;
   font-size: clamp(5.2rem, 15vw, 16rem);
@@ -640,6 +643,9 @@ main, section, article, div { min-width: 0; }
   opacity: 0;
   transform: translateY(2rem) scale(.98);
   text-shadow: 0 2px 40px rgba(0,0,0,.45);
+}
+.film__words span:last-child {
+  font-size: clamp(4.8rem, 12vw, 13rem);
 }
 
 .promise {
@@ -676,8 +682,8 @@ main, section, article, div { min-width: 0; }
   margin: 0;
   font-family: var(--display);
   font-size: clamp(4.1rem, 8vw, 8.7rem);
-  line-height: .83;
-  letter-spacing: -.06em;
+  line-height: .9;
+  letter-spacing: -.035em;
   font-weight: 900;
   max-width: 10ch;
 }
@@ -957,8 +963,8 @@ main, section, article, div { min-width: 0; }
   font-family: var(--display);
   font-size: clamp(5rem, 12vw, 12rem);
   font-weight: 900;
-  line-height: .76;
-  letter-spacing: -.07em;
+  line-height: .86;
+  letter-spacing: -.035em;
 }
 .contact > p {
   position: relative;
@@ -1428,8 +1434,20 @@ main, section, article, div { min-width: 0; }
   .eyebrow { margin-bottom: .2rem; }
   .hero__title { font-size: clamp(3.55rem, 18vw, 6.2rem); line-height: .8; }
   .hero__bottom p { max-width: 19rem; }
-  .manifesto__title, .ritual__copy h2, .method__intro h2, .gloves__copy h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
-  .promise__top h2 { font-size: clamp(2.15rem, 10.8vw, 5.2rem); }
+  .manifesto__title, .ritual__copy h2, .method__intro h2, .coach__content h2 { font-size: clamp(2.65rem, 14vw, 5.5rem); }
+  .gloves__copy {
+    max-width: none;
+  }
+  .gloves__copy h2 {
+    font-size: clamp(2.55rem, 11.5vw, 4.7rem);
+    line-height: .88;
+    letter-spacing: -.025em;
+  }
+  .promise__top h2 {
+    font-size: clamp(2.15rem, 10.8vw, 5.2rem);
+    line-height: .92;
+    letter-spacing: -.025em;
+  }
   .manifesto {
     padding-left: max(1.3rem, calc(var(--safe-left) + .35rem));
     padding-right: max(1.3rem, calc(var(--safe-right) + .35rem));
@@ -1454,16 +1472,24 @@ main, section, article, div { min-width: 0; }
   }
   .film__words span {
     top: 50%;
-    left: 50%;
-    translate: -50% -50%;
+    left: 0;
+    right: 0;
+    translate: 0 -50%;
     font-size: clamp(4.1rem, 19vw, 7rem);
+  }
+  .film__words span:last-child {
+    font-size: clamp(3.25rem, 15.5vw, 5.8rem);
   }
   .film__label {
     left: max(1.3rem, calc(var(--safe-left) + .35rem));
     right: max(1.3rem, calc(var(--safe-right) + .35rem));
   }
   .promise__line strong { font-size: clamp(1.9rem, 8.5vw, 2.8rem); }
-  .contact h2 { font-size: clamp(4rem, 20vw, 7.5rem); }
+  .contact h2 {
+    font-size: clamp(4rem, 20vw, 7.5rem);
+    line-height: .88;
+    letter-spacing: -.025em;
+  }
   .contact__cta { min-height: 5.2rem; font-size: clamp(1.65rem, 7.6vw, 2.6rem); padding-left: 0; padding-right: 0; gap: 1rem; }
   .contact__cta:hover, .contact__cta:focus-visible { padding-left: 1rem; padding-right: 1rem; }
   .brand__type { font-size: .66rem; }
@@ -1648,8 +1674,15 @@ main, section, article, div { min-width: 0; }
   .hero__bottom p { font-size: .86rem; line-height: 1.5; }
   .method__beat h3 { font-size: clamp(2.8rem, 13.5vw, 4rem); white-space: normal; }
   .film__words span { font-size: clamp(3.75rem, 18vw, 5.3rem); }
-  .promise__top h2 { font-size: clamp(2.05rem, 10.2vw, 3.6rem); }
-  .contact h2 { font-size: clamp(3.35rem, 18vw, 5.2rem); }
+  .film__words span:last-child { font-size: clamp(2.95rem, 14.5vw, 4.5rem); }
+  .promise__top h2 {
+    font-size: clamp(2.05rem, 10.2vw, 3.6rem);
+    line-height: .93;
+  }
+  .contact h2 {
+    font-size: clamp(3.35rem, 18vw, 5.2rem);
+    line-height: .9;
+  }
   .contact__cta { font-size: clamp(1.4rem, 7vw, 1.9rem); }
   .contact__phone { font-size: .68rem; }
 }
